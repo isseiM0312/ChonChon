@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1010310688866",
+    "project_id": "chonchon-cb332",
+    "storage_bucket": "chonchon-cb332.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1010310688866:android:cd609dedf0184ce394e13b",
+        "android_client_info": {
+          "package_name": "com.example.chonchon"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1010310688866-jtu5lu5iicgqqqqnt1ge8efbnnnqpr78.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-D2wyeTNqaRkZf125ThuhOb7Ej5IU91c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1010310688866-jtu5lu5iicgqqqqnt1ge8efbnnnqpr78.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
