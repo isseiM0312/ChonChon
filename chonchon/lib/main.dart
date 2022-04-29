@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'lunchmeeting.dart';
 
 /*void main() {
   runApp(const MyApp());
@@ -8,7 +9,7 @@ import 'package:flutter/material.dart';
 
 Future<void> main() async {
   // Fireabse初期化
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized(); //
   await Firebase.initializeApp();
   runApp(MyApp());
 }
@@ -87,7 +88,10 @@ class _MyHomePageState extends State<MyHomePage> {
             children: <Widget>[
               Container(child: Text(check)),
               IconButton(
-                onPressed: coms,
+                onPressed: (() => Navigator.push(context,
+                        MaterialPageRoute(builder: ((context) {
+                      return LunchMeetingApp();
+                    })))),
                 icon: Icon(Icons.data_array),
               )
             ]),
