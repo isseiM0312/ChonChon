@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ProfileEditPage extends StatefulWidget {
@@ -10,16 +12,16 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   String iamge = '';
 
   // name表示用
-  String name = '';
+  String name = '未設定';
 
   // major表示用
-  String major = '';
+  String major = '未設定';
 
   // grade表示用
-  String grade = '';
+  String grade = '未設定';
 
   // comment表示用
-  String comment = '';
+  String comment = '未設定';
 
   // tag表示用
 
@@ -31,7 +33,22 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
         actions: [
           IconButton(
               icon: Icon(Icons.done),
-              onPressed: () {
+              onPressed: () async {
+                final uid = FirebaseAuth.instance.currentUser!.uid;
+                print(uid);
+                await FirebaseFirestore.instance
+                    .collection("users")
+                    .doc(uid)
+                    .set({
+                  'name': name,
+                  'major': major,
+                  'grade': grade,
+                  'comment': comment,
+                });
+                // Firestore.instance.collection("todos")document("1").setData({
+                //   "title": "test",
+                //   "limitDay": Datetime.now()
+                // });
                 Navigator.pop(context, true);
               }),
         ],
