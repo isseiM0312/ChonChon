@@ -1,4 +1,5 @@
 import 'package:chonchon/login_page.dart';
+import 'package:chonchon/profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -81,8 +82,18 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
-      ),
+          title: Text('マイページ'),
+        actions: [
+          IconButton(icon: Icon(Icons.person), onPressed: ()
+          {Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          ProfilePage(),
+                    ),
+                  );}),
+        ],
+        ),
       body: Center(
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
