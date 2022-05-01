@@ -1,8 +1,8 @@
-import 'package:chonchon/login_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'lunchmeeting.dart';
+import 'addmeeting.dart';
 
 /*void main() {
   runApp(const MyApp());
@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: LoginPage(),
+      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
@@ -94,7 +94,13 @@ class _MyHomePageState extends State<MyHomePage> {
                       return LunchMeetingApp();
                     })))),
                 icon: Icon(Icons.data_array),
-              )
+              ),
+              IconButton(
+                  onPressed: ((() => Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return CreateMeet();
+                      })))),
+                  icon: Icon(Icons.abc))
             ]),
       ),
     );
