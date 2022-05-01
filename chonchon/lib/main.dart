@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'lunchmeeting.dart';
+import 'profile.dart';
 
 /*void main() {
   runApp(const MyApp());
@@ -97,6 +98,12 @@ class _MyHomePageState extends State<MyHomePage> {
               )
             ]),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => {Navigator.push(context,
+         MaterialPageRoute(builder: ((context) {
+           return MyApp2();
+           })))},
+           ),
     );
   }
 }
