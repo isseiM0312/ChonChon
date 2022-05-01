@@ -19,12 +19,14 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Container(
-          padding: EdgeInsets.all(24),
-          child: Column(
+
+      body:Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
+           children: [Container(
+            padding: EdgeInsets.all(24),
+            child: Column(
+             mainAxisAlignment: MainAxisAlignment.center,
+             children: <Widget>[
               // メールアドレス入力
               TextFormField(
                 decoration: InputDecoration(labelText: 'メールアドレス'),
@@ -110,9 +112,9 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ],
           ),
-        ),
-      ),
-    );
+         )],
+         ),
+        );
   }
 }
 

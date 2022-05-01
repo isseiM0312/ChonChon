@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'profile.dart';
 
 Future<void> main() async {
   // Fireabse初期化
@@ -154,7 +155,7 @@ class _LunchMeetingPageState extends State<LunchMeetingPage> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: items,
       )),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton:Column(children:[ FloatingActionButton(
           child: (Icon(Icons.abc)),
           onPressed: () {
             Future<void> res = checkfirestore();
@@ -165,6 +166,13 @@ class _LunchMeetingPageState extends State<LunchMeetingPage> {
               setState(() {});
             });
           }),
+          FloatingActionButton(
+        onPressed: () => {Navigator.push(context,
+         MaterialPageRoute(builder: ((context) {
+           return MyApp2();
+           })))},
+           ),
+           ]),
     );
   }
 }
