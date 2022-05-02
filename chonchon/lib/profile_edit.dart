@@ -29,6 +29,11 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   CollectionReference users = FirebaseFirestore.instance.collection('users');
   final FirebaseAuth auth = FirebaseAuth.instance;
 
+  final TextEditingController _name_controller = TextEditingController();
+  final TextEditingController _major_controller = TextEditingController();
+  final TextEditingController _grade_controller = TextEditingController();
+  final TextEditingController _comment_controller = TextEditingController();
+
   void getUid() async {
     late User? user = auth.currentUser;
     uid = user!.uid;
@@ -42,8 +47,6 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
         major = snapshot.get("major");
         grade = snapshot.get("grade");
         comment = snapshot.get("comment");
-        print(name);
-        print('a');
       });
     });
   }
@@ -51,9 +54,17 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   @override
   void initState() {
     super.initState();
+    setLoginInfo();
+  }
+
+  Future setLoginInfo() async {
     getUid();
-    Future(() async {
-      await getProfile();
+    await getProfile();
+    setState(() {
+      _name_controller.text = name;
+      _major_controller.text = major;
+      _grade_controller.text = grade;
+      _comment_controller.text = comment;
     });
   }
 
@@ -66,7 +77,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
           IconButton(
               icon: Icon(Icons.done),
               onPressed: () async {
-                final uid = FirebaseAuth.instance.currentUser!.uid;
+                final uid = await FirebaseAuth.instance.currentUser!.uid;
                 print(uid);
                 await FirebaseFirestore.instance
                     .collection("users")
@@ -90,8 +101,8 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             //name入力
-            TextFormField(
-              initialValue: name,
+            TextField(
+              controller: _name_controller,
               decoration: InputDecoration(labelText: '名前'),
               onChanged: (String value) {
                 setState(() {
@@ -101,7 +112,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
             ),
             //major入力
             TextFormField(
-              initialValue: major,
+              controller: _major_controller,
               decoration: InputDecoration(labelText: '学部・学科'),
               onChanged: (String value) {
                 setState(() {
@@ -111,7 +122,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
             ),
             //grade入力
             TextFormField(
-              initialValue: grade,
+              controller: _grade_controller,
               decoration: InputDecoration(labelText: '学年'),
               onChanged: (String value) {
                 setState(() {
@@ -121,7 +132,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
             ),
             //comment入力
             TextFormField(
-              initialValue: comment,
+              controller: _comment_controller,
               decoration: InputDecoration(labelText: 'コメント'),
               onChanged: (String value) {
                 setState(() {

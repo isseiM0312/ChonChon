@@ -68,19 +68,14 @@ class _ProfilePageState extends State<ProfilePage> {
           IconButton(
               icon: Icon(Icons.edit),
               onPressed: () async {
-                final result = await Navigator.push(
+                await Navigator.push(
                   context,
                   new MaterialPageRoute<bool>(
                     builder: (BuildContext context) => ProfileEditPage(),
                   ),
-                );
-
-                if (result == null) return;
-                if (result!) {
-                  setState(() {
-                    getProfile();
-                  });
-                }
+                ).then((value) async {
+                  await getProfile();
+                });
               }),
         ],
       ),
