@@ -10,19 +10,14 @@ class AddTagPage extends StatefulWidget {
 class _AddTagPageState extends State<AddTagPage> {
   //写真
   String iamge = '';
-
   // name表示用
   String name = '未設定';
-
   // major表示用
   String major = '未設定';
-
   // grade表示用
   String grade = '未設定';
-
   // comment表示用
   String comment = '未設定';
-
   late String uid;
 
   //firestoreのcollection("users")へのリファレンス
@@ -110,37 +105,6 @@ class _AddTagPageState extends State<AddTagPage> {
                 });
               },
             ),
-            //major入力
-            TextFormField(
-              controller: _major_controller,
-              decoration: InputDecoration(labelText: '学部・学科'),
-              onChanged: (String value) {
-                setState(() {
-                  major = value;
-                });
-              },
-            ),
-            //grade入力
-            TextFormField(
-              controller: _grade_controller,
-              decoration: InputDecoration(labelText: '学年'),
-              onChanged: (String value) {
-                setState(() {
-                  grade = value;
-                });
-              },
-            ),
-            //comment入力
-            TextFormField(
-              controller: _comment_controller,
-              decoration: InputDecoration(labelText: 'コメント'),
-              onChanged: (String value) {
-                setState(() {
-                  comment = value;
-                });
-              },
-            ),
-            Text("tag"),
           ],
         ),
       ),

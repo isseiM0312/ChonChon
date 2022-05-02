@@ -34,6 +34,12 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   final TextEditingController _grade_controller = TextEditingController();
   final TextEditingController _comment_controller = TextEditingController();
 
+  //tag周り
+  var _textFieldFocusNode;
+  var _inputController = TextEditingController();
+  late var _chipList = <Chip>[];
+  var _keyNumber = 0;
+
   void getUid() async {
     late User? user = auth.currentUser;
     uid = user!.uid;
@@ -55,6 +61,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   void initState() {
     super.initState();
     setLoginInfo();
+    _textFieldFocusNode = FocusNode();
   }
 
   Future setLoginInfo() async {
@@ -66,6 +73,37 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
       _grade_controller.text = grade;
       _comment_controller.text = comment;
     });
+  }
+
+  @override
+  void dispose() {
+    _textFieldFocusNode.dispose();
+    super.dispose();
+  }
+
+  void _onSubmitted(String text) {
+    setState(() {
+      _inputController.text = '';
+      _addChip(text);
+      FocusScope.of(context).requestFocus(_textFieldFocusNode);
+    });
+  }
+
+  void _addChip(String text) {
+    var chipKey = Key('chip_key_$_keyNumber');
+    _keyNumber++;
+
+    _chipList.add(
+      Chip(
+        key: chipKey,
+        label: Text(text),
+        onDeleted: () => _deleteChip(chipKey),
+      ),
+    );
+  }
+
+  void _deleteChip(Key chipKey) {
+    setState(() => _chipList.removeWhere((Widget w) => w.key == chipKey));
   }
 
   @override
@@ -141,6 +179,38 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
               },
             ),
             Text("tag"),
+            Container(
+              padding: EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  TextField(
+                    focusNode: _textFieldFocusNode,
+                    autofocus: true,
+                    controller: _inputController,
+                    decoration: InputDecoration(
+                      hintText: "タグを追加",
+                    ),
+                    onSubmitted: _onSubmitted,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Expanded(
+                        child: Wrap(
+                          alignment: WrapAlignment.start,
+                          spacing: 8.0,
+                          runSpacing: 0.0,
+                          direction: Axis.horizontal,
+                          children: _chipList,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
