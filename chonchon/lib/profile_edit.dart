@@ -23,7 +23,39 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   // comment表示用
   String comment = '未設定';
 
-  // tag表示用
+  late String uid;
+
+  //firestoreのcollection("users")へのリファレンス
+  CollectionReference users = FirebaseFirestore.instance.collection('users');
+  final FirebaseAuth auth = FirebaseAuth.instance;
+
+  void getUid() async {
+    late User? user = auth.currentUser;
+    uid = user!.uid;
+    // here you write the codes to input the data into firestore
+  }
+
+  Future getProfile() async {
+    await users.doc(uid).get().then((DocumentSnapshot snapshot) {
+      setState(() {
+        name = snapshot.get("name");
+        major = snapshot.get("major");
+        grade = snapshot.get("grade");
+        comment = snapshot.get("comment");
+        print(name);
+        print('a');
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getUid();
+    Future(() async {
+      await getProfile();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +91,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
           children: <Widget>[
             //name入力
             TextFormField(
+              initialValue: name,
               decoration: InputDecoration(labelText: '名前'),
               onChanged: (String value) {
                 setState(() {
@@ -68,6 +101,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
             ),
             //major入力
             TextFormField(
+              initialValue: major,
               decoration: InputDecoration(labelText: '学部・学科'),
               onChanged: (String value) {
                 setState(() {
@@ -77,6 +111,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
             ),
             //grade入力
             TextFormField(
+              initialValue: grade,
               decoration: InputDecoration(labelText: '学年'),
               onChanged: (String value) {
                 setState(() {
@@ -86,6 +121,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
             ),
             //comment入力
             TextFormField(
+              initialValue: comment,
               decoration: InputDecoration(labelText: 'コメント'),
               onChanged: (String value) {
                 setState(() {

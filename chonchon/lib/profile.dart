@@ -1,4 +1,6 @@
 import 'package:chonchon/profile_edit.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -24,6 +26,39 @@ class _ProfilePageState extends State<ProfilePage> {
 
   // tag表示用
 
+  late String uid;
+
+  //firestoreのcollection("users")へのリファレンス
+  CollectionReference users = FirebaseFirestore.instance.collection('users');
+  final FirebaseAuth auth = FirebaseAuth.instance;
+
+  void getUid() {
+    late User? user = auth.currentUser;
+    uid = user!.uid;
+    // here you write the codes to input the data into firestore
+  }
+
+  Future getProfile() async {
+    await users.doc(uid).get().then((DocumentSnapshot snapshot) {
+      setState(() {
+        name = snapshot.get("name");
+        major = snapshot.get("major");
+        grade = snapshot.get("grade");
+        comment = snapshot.get("comment");
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getUid();
+
+    Future(() async {
+      await getProfile();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,13 +67,20 @@ class _ProfilePageState extends State<ProfilePage> {
         actions: [
           IconButton(
               icon: Icon(Icons.edit),
-              onPressed: () {
-                Navigator.push(
+              onPressed: () async {
+                final result = await Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => ProfileEditPage(),
+                  new MaterialPageRoute<bool>(
+                    builder: (BuildContext context) => ProfileEditPage(),
                   ),
                 );
+
+                if (result == null) return;
+                if (result!) {
+                  setState(() {
+                    getProfile();
+                  });
+                }
               }),
         ],
       ),
@@ -46,10 +88,10 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text("name"),
-            Text("major"),
-            Text("grade"),
-            Text("comment"),
+            Text(name),
+            Text(major),
+            Text(grade),
+            Text(comment),
             Text("tag"),
           ],
         ),
