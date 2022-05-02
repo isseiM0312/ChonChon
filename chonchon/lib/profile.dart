@@ -1,3 +1,4 @@
+import 'package:chonchon/add_tag.dart';
 import 'package:chonchon/profile_edit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -87,6 +88,22 @@ class _ProfilePageState extends State<ProfilePage> {
             Text(major),
             Text(grade),
             Text(comment),
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: const TextStyle(fontSize: 20),
+              ),
+              onPressed: () async {
+                await Navigator.push(
+                  context,
+                  new MaterialPageRoute<bool>(
+                    builder: (BuildContext context) => AddTagPage(),
+                  ),
+                ).then((value) async {
+                  await getProfile();
+                });
+              },
+              child: const Text("タグを追加"),
+            ),
             Text("tag"),
           ],
         ),
