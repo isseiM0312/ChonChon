@@ -155,9 +155,15 @@ class _LunchMeetingPageState extends State<LunchMeetingPage> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: items,
       )),
-      floatingActionButton:Column(children:[ FloatingActionButton(
-          child: (Icon(Icons.abc)),
-          onPressed: () {
+      floatingActionButton:Column(
+        verticalDirection: VerticalDirection.up,
+        mainAxisSize: MainAxisSize.min,
+        children:[
+          FloatingActionButton(
+            heroTag: "issei",
+            child: (Icon(Icons.abc)),
+            backgroundColor: Colors.pink,
+            onPressed: () {
             Future<void> res = checkfirestore();
             res.then((res) {
               items = [];
@@ -166,12 +172,17 @@ class _LunchMeetingPageState extends State<LunchMeetingPage> {
               setState(() {});
             });
           }),
-          FloatingActionButton(
-        onPressed: () => {Navigator.push(context,
-         MaterialPageRoute(builder: ((context) {
-           return MyApp2();
-           })))},
-           ),
+          Container(
+            margin: EdgeInsets.only(bottom:16.0),
+            child: FloatingActionButton(
+              heroTag: "profile",
+              child: Icon(Icons.face),
+              backgroundColor: Colors.green,
+              onPressed: () => {Navigator.push(context,
+               MaterialPageRoute(builder: ((context) {
+                return MyApp2();
+              })))},
+            )),
            ]),
     );
   }
