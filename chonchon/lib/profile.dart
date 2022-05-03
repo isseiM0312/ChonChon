@@ -2,6 +2,7 @@ import 'package:chonchon/profile_edit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -9,6 +10,17 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  //List<String> tags = ["python", "swift", "dart", "flutter"];
+  //String tags_string = "python, swift, dart, flutter";
+  List<String> stringToList(String listAsString) {
+    return listAsString.split(',').toList();
+  }
+
+  late List<String> tagList;
+  late var _chipList = <Chip>[];
+  // tag表示用
+
+  String tagsString = '';
   //写真
   String iamge = '';
 
@@ -23,8 +35,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   // comment表示用
   String comment = '';
-
-  // tag表示用
 
   late String uid;
 
@@ -45,6 +55,17 @@ class _ProfilePageState extends State<ProfilePage> {
         major = snapshot.get("major");
         grade = snapshot.get("grade");
         comment = snapshot.get("comment");
+        tagsString = snapshot.get("tagsString");
+        tagList = stringToList(tagsString);
+        _chipList = <Chip>[];
+        for (var tag in tagList) {
+          if (tag == '') continue;
+          _chipList.add(
+            Chip(
+              label: Text("$tag"),
+            ),
+          );
+        }
       });
     });
   }
@@ -87,7 +108,21 @@ class _ProfilePageState extends State<ProfilePage> {
             Text(major),
             Text(grade),
             Text(comment),
-            Text("tag"),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Expanded(
+                  child: Wrap(
+                    alignment: WrapAlignment.start,
+                    spacing: 8.0,
+                    runSpacing: 0.0,
+                    direction: Axis.horizontal,
+                    children: _chipList,
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),

@@ -25,6 +25,14 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
 
   late String uid;
 
+  List<String> stringToList(String listAsString) {
+    return listAsString.split(',').toList();
+  }
+
+  late List<String> tagList;
+  // tag表示用
+  String tagsString = '';
+
   //firestoreのcollection("users")へのリファレンス
   CollectionReference users = FirebaseFirestore.instance.collection('users');
   final FirebaseAuth auth = FirebaseAuth.instance;
@@ -33,6 +41,12 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   final TextEditingController _major_controller = TextEditingController();
   final TextEditingController _grade_controller = TextEditingController();
   final TextEditingController _comment_controller = TextEditingController();
+
+  //tag周り
+  var _textFieldFocusNode;
+  var _inputController = TextEditingController();
+  late var _chipList = <Chip>[];
+  var _keyNumber = 0;
 
   void getUid() async {
     late User? user = auth.currentUser;
@@ -47,6 +61,13 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
         major = snapshot.get("major");
         grade = snapshot.get("grade");
         comment = snapshot.get("comment");
+        tagsString = snapshot.get("tagsString");
+        tagList = stringToList(tagsString);
+        print(tagsString);
+        _chipList = <Chip>[];
+        for (var tag in tagList) {
+          _addChip(tag);
+        }
       });
     });
   }
@@ -55,6 +76,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   void initState() {
     super.initState();
     setLoginInfo();
+    _textFieldFocusNode = FocusNode();
   }
 
   Future setLoginInfo() async {
@@ -69,6 +91,38 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   }
 
   @override
+  void dispose() {
+    _textFieldFocusNode.dispose();
+    super.dispose();
+  }
+
+  void _onSubmitted(String text) {
+    setState(() {
+      _inputController.text = '';
+      _addChip(text);
+      FocusScope.of(context).requestFocus(_textFieldFocusNode);
+    });
+  }
+
+  void _addChip(String text) {
+    if (text == '') return;
+    var chipKey = Key('chip_key_$_keyNumber');
+    _keyNumber++;
+
+    _chipList.add(
+      Chip(
+        key: chipKey,
+        label: Text(text),
+        onDeleted: () => _deleteChip(chipKey),
+      ),
+    );
+  }
+
+  void _deleteChip(Key chipKey) {
+    setState(() => _chipList.removeWhere((Widget w) => w.key == chipKey));
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -79,6 +133,12 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
               onPressed: () async {
                 final uid = await FirebaseAuth.instance.currentUser!.uid;
                 print(uid);
+                tagsString = '';
+                for (var chip in _chipList) {
+                  Text text = chip.label as Text;
+                  tagsString += "${text.data},";
+                }
+
                 await FirebaseFirestore.instance
                     .collection("users")
                     .doc(uid)
@@ -87,6 +147,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                   'major': major,
                   'grade': grade,
                   'comment': comment,
+                  'tagsString': tagsString,
                 });
                 // Firestore.instance.collection("todos")document("1").setData({
                 //   "title": "test",
@@ -140,7 +201,39 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                 });
               },
             ),
-            Text("tag"),
+
+            Container(
+              padding: EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  TextField(
+                    focusNode: _textFieldFocusNode,
+                    autofocus: true,
+                    controller: _inputController,
+                    decoration: InputDecoration(
+                      hintText: "タグを追加",
+                    ),
+                    onSubmitted: _onSubmitted,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Expanded(
+                        child: Wrap(
+                          alignment: WrapAlignment.start,
+                          spacing: 8.0,
+                          runSpacing: 0.0,
+                          direction: Axis.horizontal,
+                          children: _chipList,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
