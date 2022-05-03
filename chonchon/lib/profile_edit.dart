@@ -25,6 +25,14 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
 
   late String uid;
 
+  List<String> stringToList(String listAsString) {
+    return listAsString.split(',').toList();
+  }
+
+  late List<String> tagList;
+  // tag表示用
+  String tagsString = '';
+
   //firestoreのcollection("users")へのリファレンス
   CollectionReference users = FirebaseFirestore.instance.collection('users');
   final FirebaseAuth auth = FirebaseAuth.instance;
@@ -53,6 +61,13 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
         major = snapshot.get("major");
         grade = snapshot.get("grade");
         comment = snapshot.get("comment");
+        tagsString = snapshot.get("tagsString");
+        tagList = stringToList(tagsString);
+        print(tagsString);
+        _chipList = <Chip>[];
+        for (var tag in tagList) {
+          _addChip(tag);
+        }
       });
     });
   }
@@ -178,7 +193,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                 });
               },
             ),
-            Text("tag"),
+
             Container(
               padding: EdgeInsets.all(16.0),
               child: Column(

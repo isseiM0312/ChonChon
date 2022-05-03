@@ -18,6 +18,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
   late List<String> tagList;
   late var _chipList = <Chip>[];
+  // tag表示用
+
+  String tagsString = '';
   //写真
   String iamge = '';
 
@@ -33,8 +36,6 @@ class _ProfilePageState extends State<ProfilePage> {
   // comment表示用
   String comment = '';
 
-  // tag表示用
-  String tagsString = '';
   late String uid;
 
   //firestoreのcollection("users")へのリファレンス
@@ -80,6 +81,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    Text text = _chipList[0].label as Text;
+    print("${_chipList[0].label}");
+    print(text.data);
     return Scaffold(
       appBar: AppBar(
         title: Text('マイページ'),
