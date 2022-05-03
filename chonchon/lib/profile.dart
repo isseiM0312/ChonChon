@@ -59,6 +59,7 @@ class _ProfilePageState extends State<ProfilePage> {
         tagList = stringToList(tagsString);
         _chipList = <Chip>[];
         for (var tag in tagList) {
+          if (tag == '') continue;
           _chipList.add(
             Chip(
               label: Text("$tag"),
@@ -81,9 +82,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    Text text = _chipList[0].label as Text;
-    print("${_chipList[0].label}");
-    print(text.data);
     return Scaffold(
       appBar: AppBar(
         title: Text('マイページ'),

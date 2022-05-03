@@ -105,6 +105,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   }
 
   void _addChip(String text) {
+    if (text == '') return;
     var chipKey = Key('chip_key_$_keyNumber');
     _keyNumber++;
 
@@ -132,6 +133,12 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
               onPressed: () async {
                 final uid = await FirebaseAuth.instance.currentUser!.uid;
                 print(uid);
+                tagsString = '';
+                for (var chip in _chipList) {
+                  Text text = chip.label as Text;
+                  tagsString += "${text.data},";
+                }
+
                 await FirebaseFirestore.instance
                     .collection("users")
                     .doc(uid)
@@ -140,6 +147,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                   'major': major,
                   'grade': grade,
                   'comment': comment,
+                  'tagsString': tagsString,
                 });
                 // Firestore.instance.collection("todos")document("1").setData({
                 //   "title": "test",
