@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:chonchon/profile_edit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -47,6 +49,8 @@ class _ProfilePageState extends State<ProfilePage> {
     uid = user!.uid;
     // here you write the codes to input the data into firestore
   }
+
+  File? image;
 
   Future getProfile() async {
     await users.doc(uid).get().then((DocumentSnapshot snapshot) {
