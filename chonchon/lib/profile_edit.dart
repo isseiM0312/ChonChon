@@ -1,6 +1,10 @@
+import 'dart:io' as io;
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProfileEditPage extends StatefulWidget {
   @override
@@ -8,8 +12,8 @@ class ProfileEditPage extends StatefulWidget {
 }
 
 class _ProfileEditPageState extends State<ProfileEditPage> {
-  //写真
-  String iamge = '';
+  // 写真を表示用
+  String imgPathUse = '';
 
   // name表示用
   String name = '未設定';
@@ -22,7 +26,6 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
 
   // comment表示用
   String comment = '未設定';
-
   late String uid;
 
   //firestoreのcollection("users")へのリファレンス
@@ -34,6 +37,8 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   final TextEditingController _grade_controller = TextEditingController();
   final TextEditingController _comment_controller = TextEditingController();
 
+  get _img => null;
+
   void getUid() async {
     late User? user = auth.currentUser;
     uid = user!.uid;
@@ -43,6 +48,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   Future getProfile() async {
     await users.doc(uid).get().then((DocumentSnapshot snapshot) {
       setState(() {
+        imgPathUse = snapshot.get("imgPathUse");
         name = snapshot.get("name");
         major = snapshot.get("major");
         grade = snapshot.get("grade");
@@ -57,10 +63,81 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
     setLoginInfo();
   }
 
+  Future<String?> select_icon(BuildContext context) async {
+    const String SELECT_ICON = "プロフィール画像を選択";
+    const List<String> SELECT_ICON_OPTIONS = ["写真から選択", "写真を撮影"];
+    const int GALLERY = 0;
+    const int CAMERA = 1;
+
+    var _select_type = await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            title: Text(SELECT_ICON),
+            children: SELECT_ICON_OPTIONS.asMap().entries.map((e) {
+              return SimpleDialogOption(
+                child: ListTile(
+                  title: Text(e.value),
+                ),
+                onPressed: () => Navigator.of(context).pop(e.key),
+              );
+            }).toList(),
+          );
+        });
+
+    final picker = ImagePicker();
+    var _img_src;
+
+    if (_select_type == null) {
+      return null;
+    }
+    //カメラで撮影
+    else if (_select_type == CAMERA) {
+      _img_src = ImageSource.camera;
+    }
+    //ギャラリーから選択
+    else if (_select_type == GALLERY) {
+      _img_src = ImageSource.gallery;
+    }
+
+    PickedFile? pickedFile =
+        (await picker.pickImage(source: _img_src)) as PickedFile?;
+
+    if (pickedFile == null) {
+      return null;
+    } else {
+      return pickedFile.path;
+    }
+  }
+
+  Future<void> uploadFile(String sourcePath, String uploadFileName) async {
+    final FirebaseStorage storage = FirebaseStorage.instance;
+    Reference imageRef = storage.ref().child("images"); //保存するフォルダ
+
+    io.File file = io.File(sourcePath);
+    UploadTask task = imageRef.child(uploadFileName).putFile(file);
+    String imageUrl = await imageRef.getDownloadURL();
+    print(imageUrl);
+
+    try {
+      var snapshot = await task;
+    } catch (FirebaseException) {
+      //エラー処理
+    }
+
+    late Image _img;
+    // 画面に反映
+    setState(() {
+      _img = Image.network(imageUrl);
+      print(_img);
+    });
+  }
+
   Future setLoginInfo() async {
     getUid();
     await getProfile();
     setState(() {
+      // _imgPathUse_controller.text = imgPathUse;
       _name_controller.text = name;
       _major_controller.text = major;
       _grade_controller.text = grade;
@@ -100,7 +177,17 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            //name入力
+            if (_img != null) _img,
+
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: const TextStyle(fontSize: 20),
+              ),
+              onPressed: () async {
+                await select_icon(context);
+              },
+              child: const Text('Enabled'),
+            ),
             TextField(
               controller: _name_controller,
               decoration: InputDecoration(labelText: '名前'),
