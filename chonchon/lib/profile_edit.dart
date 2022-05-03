@@ -225,6 +225,9 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                   'grade': grade,
                   'comment': comment,
                   'tagsString': tagsString,
+
+                  //いったんimagepathuse
+                  'imgPathUse': '',
                 });
                 // Firestore.instance.collection("todos")document("1").setData({
                 //   "title": "test",
