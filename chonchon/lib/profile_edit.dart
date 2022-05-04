@@ -1,4 +1,5 @@
 import 'dart:io' as io;
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -51,8 +52,6 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   late var _chipList = <Chip>[];
   var _keyNumber = 0;
 
-  get _img => null;
-
   void getUid() async {
     late User? user = auth.currentUser;
     uid = user!.uid;
@@ -83,53 +82,6 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
     super.initState();
     setLoginInfo();
     _textFieldFocusNode = FocusNode();
-  }
-
-  Future<String?> select_icon(BuildContext context) async {
-    const String SELECT_ICON = "プロフィール画像を選択";
-    const List<String> SELECT_ICON_OPTIONS = ["写真から選択", "写真を撮影"];
-    const int GALLERY = 0;
-    const int CAMERA = 1;
-
-    var _select_type = await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return SimpleDialog(
-            title: Text(SELECT_ICON),
-            children: SELECT_ICON_OPTIONS.asMap().entries.map((e) {
-              return SimpleDialogOption(
-                child: ListTile(
-                  title: Text(e.value),
-                ),
-                onPressed: () => Navigator.of(context).pop(e.key),
-              );
-            }).toList(),
-          );
-        });
-
-    final picker = ImagePicker();
-    var _img_src;
-
-    if (_select_type == null) {
-      return null;
-    }
-    //カメラで撮影
-    else if (_select_type == CAMERA) {
-      _img_src = ImageSource.camera;
-    }
-    //ギャラリーから選択
-    else if (_select_type == GALLERY) {
-      _img_src = ImageSource.gallery;
-    }
-
-    PickedFile? pickedFile =
-        (await picker.pickImage(source: _img_src)) as PickedFile?;
-
-    if (pickedFile == null) {
-      return null;
-    } else {
-      return pickedFile.path;
-    }
   }
 
   Future<void> uploadFile(String sourcePath, String uploadFileName) async {
@@ -199,6 +151,9 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
     setState(() => _chipList.removeWhere((Widget w) => w.key == chipKey));
   }
 
+  final ImagePicker _picker = ImagePicker();
+  File? _file;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -237,95 +192,95 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
               }),
         ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            if (_img != null) _img,
-
-            TextButton(
-              style: TextButton.styleFrom(
-                textStyle: const TextStyle(fontSize: 20),
-              ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          if (_file != null)
+            Image.file(
+              _file!,
+              fit: BoxFit.cover,
+            ),
+          OutlinedButton(
               onPressed: () async {
-                await select_icon(context);
+                final XFile? _image =
+                    await _picker.pickImage(source: ImageSource.gallery);
+                _file = File(_image!.path);
+                setState(() {});
               },
-              child: const Text('Enabled'),
-            ),
-            TextField(
-              controller: _name_controller,
-              decoration: InputDecoration(labelText: '名前'),
-              onChanged: (String value) {
-                setState(() {
-                  name = value;
-                });
-              },
-            ),
-            //major入力
-            TextFormField(
-              controller: _major_controller,
-              decoration: InputDecoration(labelText: '学部・学科'),
-              onChanged: (String value) {
-                setState(() {
-                  major = value;
-                });
-              },
-            ),
-            //grade入力
-            TextFormField(
-              controller: _grade_controller,
-              decoration: InputDecoration(labelText: '学年'),
-              onChanged: (String value) {
-                setState(() {
-                  grade = value;
-                });
-              },
-            ),
-            //comment入力
-            TextFormField(
-              controller: _comment_controller,
-              decoration: InputDecoration(labelText: 'コメント'),
-              onChanged: (String value) {
-                setState(() {
-                  comment = value;
-                });
-              },
-            ),
+              child: const Text('画像を選択')),
+          TextField(
+            controller: _name_controller,
+            decoration: InputDecoration(labelText: '名前'),
+            onChanged: (String value) {
+              setState(() {
+                name = value;
+              });
+            },
+          ),
+          //major入力
+          TextFormField(
+            controller: _major_controller,
+            decoration: InputDecoration(labelText: '学部・学科'),
+            onChanged: (String value) {
+              setState(() {
+                major = value;
+              });
+            },
+          ),
+          //grade入力
+          TextFormField(
+            controller: _grade_controller,
+            decoration: InputDecoration(labelText: '学年'),
+            onChanged: (String value) {
+              setState(() {
+                grade = value;
+              });
+            },
+          ),
+          //comment入力
+          TextFormField(
+            controller: _comment_controller,
+            decoration: InputDecoration(labelText: 'コメント'),
+            onChanged: (String value) {
+              setState(() {
+                comment = value;
+              });
+            },
+          ),
 
-            Container(
-              padding: EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  TextField(
-                    focusNode: _textFieldFocusNode,
-                    autofocus: true,
-                    controller: _inputController,
-                    decoration: InputDecoration(
-                      hintText: "タグを追加",
-                    ),
-                    onSubmitted: _onSubmitted,
+          Container(
+            padding: EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                TextField(
+                  focusNode: _textFieldFocusNode,
+                  autofocus: true,
+                  controller: _inputController,
+                  decoration: InputDecoration(
+                    hintText: "タグを追加",
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Expanded(
-                        child: Wrap(
-                          alignment: WrapAlignment.start,
-                          spacing: 8.0,
-                          runSpacing: 0.0,
-                          direction: Axis.horizontal,
-                          children: _chipList,
-                        ),
+                  onSubmitted: _onSubmitted,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Expanded(
+                      child: Wrap(
+                        alignment: WrapAlignment.start,
+                        spacing: 8.0,
+                        runSpacing: 0.0,
+                        direction: Axis.horizontal,
+                        children: _chipList,
                       ),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
