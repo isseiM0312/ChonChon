@@ -84,29 +84,6 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
     _textFieldFocusNode = FocusNode();
   }
 
-  Future<void> uploadFile(String sourcePath, String uploadFileName) async {
-    final FirebaseStorage storage = FirebaseStorage.instance;
-    Reference imageRef = storage.ref().child("images"); //保存するフォルダ
-
-    io.File file = io.File(sourcePath);
-    UploadTask task = imageRef.child(uploadFileName).putFile(file);
-    String imageUrl = await imageRef.getDownloadURL();
-    print(imageUrl);
-
-    try {
-      var snapshot = await task;
-    } catch (FirebaseException) {
-      //エラー処理
-    }
-
-    late Image _img;
-    // 画面に反映
-    setState(() {
-      _img = Image.network(imageUrl);
-      print(_img);
-    });
-  }
-
   Future setLoginInfo() async {
     getUid();
     await getProfile();
@@ -152,7 +129,28 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   }
 
   final ImagePicker _picker = ImagePicker();
+  late XFile? _image = null;
   File? _file;
+
+  Future<void> uploadFile(String sourcePath, String uploadFileName) async {
+    final FirebaseStorage storage = FirebaseStorage.instance;
+    Reference imageRef = storage.ref().child("profileImage"); //保存するフォルダ
+
+    io.File file = io.File(sourcePath);
+
+    print('x');
+    print(uploadFileName);
+    //String imageUrl = await imageRef.getDownloadURL();
+    //print(imageUrl);
+
+    try {
+      await imageRef.child(uploadFileName).putFile(file);
+      print('z');
+    } catch (FirebaseException) {
+      print(FirebaseException);
+      //エラー処理
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -185,6 +183,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                   //いったんimagepathuse
                   'imgPathUse': '',
                 });
+                uploadFile(_image!.path, uid);
                 // Firestore.instance.collection("todos")document("1").setData({
                 //   "title": "test",
                 //   "limitDay": Datetime.now()
@@ -207,8 +206,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
               ),
             OutlinedButton(
                 onPressed: () async {
-                  final XFile? _image =
-                      await _picker.pickImage(source: ImageSource.gallery);
+                  _image = await _picker.pickImage(source: ImageSource.gallery);
                   _file = File(_image!.path);
                   setState(() {});
                 },
