@@ -1,35 +1,41 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(MyApp2());
+
+void main() {
+  runApp(
+    const MyApp2()
+     );
+   }
 
 class MyApp2 extends StatelessWidget {
+  const MyApp2 ({Key? key}) : super(key: key);
+
+  static const String _title = 'Flutter Code Sample';
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage2(title: 'Flutter Demo Home Page'),
+      title: _title,
+      home: MyHomePage2(),
     );
   }
 }
 
 class MyHomePage2 extends StatefulWidget {
-  final String title;
 
   const MyHomePage2({
     Key? key,
-    required this.title,
+
   }) : super(key: key);
 
   @override
-  State<MyHomePage2> createState() => _MyHomePageState();
+  State<MyHomePage2> createState() {
+    return _MyHomePageState();
+  }
 }
 
 class _MyHomePageState extends State<MyHomePage2> {
-
+  var _selectedValue = 'Language';
+  var _usStates = ["Edit", "Language"];
 
   @override
   Widget build(BuildContext context) {
@@ -43,13 +49,30 @@ class _MyHomePageState extends State<MyHomePage2> {
            fontSize: 20
            ),
          elevation: 0,
+         actions: [
+           PopupMenuButton(
+             initialValue: _selectedValue,
+             onSelected: (String s){
+               setState(() {
+                 _selectedValue = s;
+               });
+             },
+             itemBuilder: (BuildContext contex) {
+               return _usStates.map((String s) {
+                 return PopupMenuItem(
+                   child: Text(s),
+                   value: s,
+                   );
+               }).toList();
+             },
+           )
+         ],
        ),
       body:Center(
         child: Column(
           children: [
             Container(
               height: 150,
-              width: 300,
               margin: EdgeInsets.only(top:25.0),
               decoration: BoxDecoration(
                 image: DecorationImage(
@@ -60,7 +83,6 @@ class _MyHomePageState extends State<MyHomePage2> {
               ),
             ),
             Container(
-              height: 25,
               width: 300,
               margin: EdgeInsets.only(top: 10),
               child: Text("Name",
@@ -73,8 +95,7 @@ class _MyHomePageState extends State<MyHomePage2> {
               )
             ),
             Container(
-              width: 300,
-              height: 100,
+              width: 350,
               decoration: BoxDecoration(
                 border: const Border(
                   top: const BorderSide(
@@ -87,8 +108,8 @@ class _MyHomePageState extends State<MyHomePage2> {
                   ),
                 ),
               ),
+              alignment: const Alignment(0, 0),
               child: const Text('Detail',
-              textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 20,
                 color: Colors.red,
@@ -97,8 +118,16 @@ class _MyHomePageState extends State<MyHomePage2> {
             ),
           ]),
       ),
+
+
+
+
     );
   }
 
-}
+
+    }
+
+
+
 

@@ -19,7 +19,16 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
+      appBar: AppBar(
+        title: const Text("Log in"),
+        backgroundColor: Colors.white,
+        titleTextStyle: const TextStyle(
+          color: Colors.black,
+          fontWeight: FontWeight.bold,
+          fontSize: 20
+        ),
+        elevation: 0,
+      ),
       body:Column(
             mainAxisAlignment: MainAxisAlignment.center,
            children: [Container(
