@@ -59,9 +59,6 @@ class _Page5State extends State<Page5> {
                     int.parse(snapshot.data!['currentNum']) &&
                 counter == 0)) {
               counter++;
-              print("current ${snapshot.data!['currentNum']}");
-              print("max ${snapshot.data!['maxnum']}");
-              print("name ${snapshot.data!['Users']}");
               handleEventMaking(); //shift to Page8
             }
           }
