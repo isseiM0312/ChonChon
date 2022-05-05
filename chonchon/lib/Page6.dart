@@ -44,7 +44,7 @@ class _Page6State extends State<Page6> {
                       ),
                       onPressed: () => {
                         Navigator.of(context)
-                            .push(MaterialPageRoute(builder: (context) {
+                            .pushReplacement(MaterialPageRoute(builder: (context) {
                           return Page5();
                         }))
                       },

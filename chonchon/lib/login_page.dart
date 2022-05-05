@@ -1,3 +1,4 @@
+import 'package:chonchon/Page5.dart';
 import 'package:chonchon/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -94,9 +95,9 @@ class _LoginPageState extends State<LoginPage> {
                       );
                       // ログインに成功した場合
                       // チャット画面に遷移＋ログイン画面を破棄
-                      await Navigator.of(context).pushReplacement(
+                      await Navigator.of(context).push(
                         MaterialPageRoute(builder: (context) {
-                          return MyHomePage(title: 'Flutter Demo Home Page');
+                          return Page5();
                         }),
                       );
                     } catch (e) {
@@ -115,4 +116,3 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
-
