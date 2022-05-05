@@ -205,13 +205,17 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
             ),
 
             if (_file != null)
-              AspectRatio(
-                aspectRatio: 1,
-                child: Image.file(
-                  _file!,
-                  fit: BoxFit.cover,
+              SizedBox(
+                child: Container(
+                  width: 270.0,
+                  height: 270.0,
+                  child: Image.file(
+                    _file!,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
+
             OutlinedButton(
                 onPressed: () async {
                   setState(toggleHiddenImage);
@@ -293,6 +297,13 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                     ],
                   ),
                 ],
+              ),
+            ),
+            Text(
+              "つけたいタグを入力しエンターを押してください（複数選択可能です）",
+              style: TextStyle(
+                fontSize: 10,
+                height: 2.0, //テキストサイズの2倍
               ),
             ),
           ],

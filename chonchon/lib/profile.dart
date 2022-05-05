@@ -20,9 +20,11 @@ class _ProfilePageState extends State<ProfilePage> {
 
   late List<String> tagList;
   late var _chipList = <Chip>[];
+
   // tag表示用
 
   String tagsString = '';
+
   //写真
   String iamge = '';
 
@@ -108,10 +110,40 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(name),
-            Text(major),
-            Text(grade),
-            Text(comment),
+            Expanded(
+              child: Container(
+                width: 300.0,
+                height: 300.0,
+                child: Image.asset("assets/images/noimage.png"),
+              ),
+            ),
+            Text(
+              name,
+              style: TextStyle(
+                fontSize: 20,
+              ),
+            ),
+            Text(
+              major,
+              style: TextStyle(
+                fontSize: 20,
+                height: 2.0, //テキストサイズの2倍
+              ),
+            ),
+            Text(
+              grade,
+              style: TextStyle(
+                fontSize: 20,
+                height: 2.0, //テキストサイズの2倍
+              ),
+            ),
+            Text(
+              comment,
+              style: TextStyle(
+                fontSize: 20,
+                height: 2.0, //テキストサイズの2倍
+              ),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -126,6 +158,11 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
               ],
+            ),
+            Expanded(
+              child: Container(
+                height: 200.0,
+              ),
             ),
           ],
         ),
