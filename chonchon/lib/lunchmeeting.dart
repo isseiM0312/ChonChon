@@ -1,5 +1,5 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 Future<void> main() async {
@@ -56,7 +56,7 @@ class event {
   String eventname = "";
   String time = "";
 
-  //event({this.document, this.users, this.eventname, this.time});
+//event({this.document, this.users, this.eventname, this.time});
 }
 
 List events = []; //eventクラスを格納するリスト

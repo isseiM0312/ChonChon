@@ -1,6 +1,6 @@
-import 'package:chonchon/main.dart';
+import 'package:chonchon/profile.dart';
+import 'package:chonchon/profile_edit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 // ログイン画面用Widget
@@ -12,6 +12,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   // メッセージ表示用
   String infoText = '';
+
   // 入力したメールアドレス・パスワード
   String email = '';
   String password = '';
@@ -63,10 +64,10 @@ class _LoginPageState extends State<LoginPage> {
                         password: password,
                       );
                       // ユーザー登録に成功した場合
-                      // チャット画面に遷移＋ログイン画面を破棄
+                      // プロフィール画面に遷移＋ログイン画面を破棄
                       await Navigator.of(context).pushReplacement(
                         MaterialPageRoute(builder: (context) {
-                          return MyHomePage(title: 'Flutter Demo Home Page');
+                          return ProfileEditPage();
                         }),
                       );
                     } catch (e) {
@@ -93,10 +94,11 @@ class _LoginPageState extends State<LoginPage> {
                         password: password,
                       );
                       // ログインに成功した場合
-                      // チャット画面に遷移＋ログイン画面を破棄
+                      // 掲示板画面に遷移＋ログイン画面を破棄
                       await Navigator.of(context).pushReplacement(
                         MaterialPageRoute(builder: (context) {
-                          return MyHomePage(title: 'Flutter Demo Home Page');
+                          // return LunchMeetingApp();
+                          return ProfilePage();
                         }),
                       );
                     } catch (e) {
@@ -115,4 +117,3 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
-

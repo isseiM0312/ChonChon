@@ -34,6 +34,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   }
 
   late List<String> tagList;
+
   // tag表示用
   String tagsString = '';
 
@@ -152,6 +153,8 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
     }
   }
 
+  bool isVisible = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -196,6 +199,11 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            Visibility(
+              child: Image.asset("assets/images/noimage.png"),
+              visible: isVisible,
+            ),
+
             if (_file != null)
               AspectRatio(
                 aspectRatio: 1,
@@ -206,7 +214,11 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
               ),
             OutlinedButton(
                 onPressed: () async {
+                  setState(toggleHiddenImage);
                   _image = await _picker.pickImage(source: ImageSource.gallery);
+                  if (_image == null) {
+                    setState(toggleHiddenImage);
+                  }
                   _file = File(_image!.path);
                   setState(() {});
                 },
@@ -287,5 +299,9 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
         ),
       ),
     );
+  }
+
+  void toggleHiddenImage() {
+    isVisible = !isVisible;
   }
 }
