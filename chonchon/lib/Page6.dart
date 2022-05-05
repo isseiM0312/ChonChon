@@ -11,78 +11,48 @@ class _Page6State extends State<Page6> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Page6"),
+          title: Text(""),
+          backgroundColor: Colors.white,
           automaticallyImplyLeading: false,
         ),
         body: Center(
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-              ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: Stack(
-                  children: <Widget>[
-                    Positioned.fill(
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: <Color>[
-                              Color(0xFF0D47A1),
-                              Color(0xFF1976D2),
-                              Color(0xFF42A5F5),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    TextButton(
-                      style: TextButton.styleFrom(
-                        padding: const EdgeInsets.only(
-                            top: 20, bottom: 20, right: 70, left: 70),
-                        primary: Colors.white,
-                        textStyle: const TextStyle(fontSize: 30),
-                      ),
-                      onPressed: () => {
-                        Navigator.of(context)
-                            .pushReplacement(MaterialPageRoute(builder: (context) {
-                          return Page5();
-                        }))
-                      },
-                      child: const Text('Try again'),
-                    ),
-                  ],
-                ),
+              ElevatedButton(
+                onPressed: () => {
+                  Navigator.of(context)
+                      .pushReplacement(MaterialPageRoute(builder: (context) {
+                    return Page5();
+                  }))
+                },
+                child: const Text('Try again',
+                    style: TextStyle(color: Colors.blueAccent)),
+                style: ElevatedButton.styleFrom(
+                    primary: Colors.white,
+                    onPrimary: Colors.blue,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    padding: const EdgeInsets.only(
+                        top: 20, bottom: 20, right: 70, left: 70),
+                    textStyle: const TextStyle(fontSize: 30),
+                    side: const BorderSide()),
               ),
               const SizedBox(height: 80),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: Stack(
-                  children: <Widget>[
-                    Positioned.fill(
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: <Color>[
-                              Color(0xFF0D47A1),
-                              Color(0xFF1976D2),
-                              Color(0xFF42A5F5),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    TextButton(
-                      style: TextButton.styleFrom(
-                        padding: const EdgeInsets.only(
-                            top: 20, bottom: 20, right: 70, left: 70),
-                        primary: Colors.white,
-                        textStyle: const TextStyle(fontSize: 30),
-                      ),
-                      onPressed: () {},
-                      child: const Text('Quit'),
-                    ),
-                  ],
-                ),
+              ElevatedButton(
+                onPressed: () => {},
+                child:
+                    const Text('Quit', style: TextStyle(color: Colors.blueAccent)),
+                style: ElevatedButton.styleFrom(
+                    primary: Colors.white,
+                    onPrimary: Colors.blue,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    padding: const EdgeInsets.only(
+                        top: 20, bottom: 20, right: 70, left: 70),
+                    textStyle:
+                        const TextStyle(fontSize: 30),
+                    side: const BorderSide()),
               ),
             ])));
   }
