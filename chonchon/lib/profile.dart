@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:chonchon/profile.dart';
+import 'package:chonchon/profile_edit.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 
 void main() {
