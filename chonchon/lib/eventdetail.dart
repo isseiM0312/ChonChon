@@ -109,7 +109,7 @@ class _EventdetailPageState extends State<EventdetailPage> {
             }),
           },
         );
-     await FirebaseFirestore.instance
+    /*  await FirebaseFirestore.instance
         .collection("Event")
         .where('', whereIn: [uid])
         .get()
@@ -126,7 +126,7 @@ class _EventdetailPageState extends State<EventdetailPage> {
               }
             }),
           },
-        );
+        ); */
     await FirebaseFirestore.instance
         .collection("users")
         .doc(uid)
