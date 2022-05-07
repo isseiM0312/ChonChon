@@ -33,7 +33,6 @@ class _ChatPageState extends State<ChatPage> {
 
   void initState() {
     super.initState();
-    print(widget.eventkey);
     setState(() {
       keykey = widget.eventkey;
     });
@@ -42,8 +41,6 @@ class _ChatPageState extends State<ChatPage> {
   // firestoreからメッセージの内容をとってきて_messageにセット
   // firestoreからメッセージの内容をとってきて_messageにセット
   void _getMessages(String key) async {
-    print("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHello");
-    print(widget.eventkey);
     final getData = await FirebaseFirestore.instance
         .collection('chat_room')
         .doc("チャット")
@@ -110,7 +107,7 @@ class _ChatPageState extends State<ChatPage> {
     final textMessage = types.TextMessage(
       author: _user,
       createdAt: DateTime.now().millisecondsSinceEpoch, //
-      id: randomId,
+      id: uid,
       text: message.text,
     );
 
@@ -153,7 +150,6 @@ class _ChatPageState extends State<ChatPage> {
                   .snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
-                print(widget.eventkey);
                 _getMessages(keykey);
                 //  return  Text(snapshot.data!.docs[0]["messago0"]);
                 /*Message a ;
