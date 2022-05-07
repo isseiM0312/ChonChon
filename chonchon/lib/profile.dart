@@ -3,15 +3,12 @@ import 'package:chonchon/profile.dart';
 import 'package:chonchon/profile_edit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-
 void main() {
-  runApp(
-    const MyApp2()
-     );
-   }
+  runApp(const MyApp2());
+}
 
 class MyApp2 extends StatelessWidget {
-  const MyApp2 ({Key? key}) : super(key: key);
+  const MyApp2({Key? key}) : super(key: key);
 
   static const String _title = 'Flutter Code Sample';
   @override
@@ -24,10 +21,8 @@ class MyApp2 extends StatelessWidget {
 }
 
 class MyHomePage2 extends StatefulWidget {
-
   const MyHomePage2({
     Key? key,
-
   }) : super(key: key);
 
   @override
@@ -43,61 +38,55 @@ class _MyHomePageState extends State<MyHomePage2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       appBar: AppBar(
-         title: const Text("Profile"),
-         backgroundColor: Colors.white,
-         titleTextStyle: const TextStyle(
-           color: Colors.black,
-           fontWeight: FontWeight.bold,
-           fontSize: 20
-           ),
-         elevation: 0,
-         actions: [
-           PopupMenuButton(
-             initialValue: _selectedValue,
-             onSelected: (String s){
-               setState(() {
-                 _selectedValue = s;
-               });
-             },
-             itemBuilder: (BuildContext contex) {
-               return _usStates.map((String s) {
-                 return PopupMenuItem(
-                   child: Text(s),
-                   value: s,
-                   );
-               }).toList();
-             },
-           )
-         ],
-       ),
-      body:Center(
-        child: Column(
-          children: [
-            Container(
-              height: 150,
-              margin: EdgeInsets.only(top:25.0),
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage("images/icon2.jpg"),
-                  fit: BoxFit.contain
-                  ),
-                shape:BoxShape.circle,
-              ),
+      appBar: AppBar(
+        title: const Text("Profile"),
+        backgroundColor: Colors.white,
+        titleTextStyle: const TextStyle(
+            color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20),
+        elevation: 0,
+        actions: [
+          PopupMenuButton(
+            initialValue: _selectedValue,
+            onSelected: (String s) {
+              setState(() {
+                _selectedValue = s;
+              });
+            },
+            itemBuilder: (BuildContext contex) {
+              return _usStates.map((String s) {
+                return PopupMenuItem(
+                  child: Text(s),
+                  value: s,
+                );
+              }).toList();
+            },
+          )
+        ],
+      ),
+      body: Center(
+        child: Column(children: [
+          Container(
+            height: 150,
+            margin: EdgeInsets.only(top: 25.0),
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage("images/icon2.jpg"), fit: BoxFit.contain),
+              shape: BoxShape.circle,
             ),
-            Container(
+          ),
+          Container(
               width: 300,
               margin: EdgeInsets.only(top: 10),
-              child: Text("Name",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 20,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
-              )
-            ),
-            Container(
+              child: Text(
+                "Name",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              )),
+          Container(
               width: 350,
               decoration: BoxDecoration(
                 border: const Border(
@@ -112,25 +101,16 @@ class _MyHomePageState extends State<MyHomePage2> {
                 ),
               ),
               alignment: const Alignment(0, 0),
-              child: const Text('Detail',
-              style: TextStyle(
-                fontSize: 20,
-                color: Colors.red,
-                fontWeight: FontWeight.bold,
-              ),)
-            ),
-          ]),
+              child: const Text(
+                'Detail',
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                ),
+              )),
+        ]),
       ),
-
-
-
-
     );
   }
-
-
-    }
-
-
-
-
+}

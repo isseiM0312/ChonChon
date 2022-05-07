@@ -30,23 +30,18 @@ class LunchMeetingApp extends StatelessWidget {
 }
 
 void coms() async {
-  print("start");
   await Firebase.initializeApp();
-  print("clean");
   await FirebaseFirestore.instance
       .collection('User')
       .doc('D1GKO8M8XrqA5Dh9Up5T')
       .get()
-      .then((value) {
-    print(value.get("name"));
-  });
+      .then((value) {});
   /*.set({
       'event': '合コン',
       'gender': 'male',
       'mail': 'isseieikisouya@outlook.jp',
       'name': '森一晟亜種',
       'studentnumber': 0303030303*/
-  print("finished");
 }
 
 class event {
@@ -85,7 +80,6 @@ late List l = [];
 checkfirestore() async {
   events = [];
   List documents = [];
-  print("start");
   await Firebase.initializeApp();
   await FirebaseFirestore.instance
       .collection("Event")
@@ -95,7 +89,6 @@ checkfirestore() async {
               documents.add(doc.id);
             })
           });
-  print("devs");
   for (var document in documents) {
     event someevent = event();
     someevent.document = document;
@@ -112,16 +105,11 @@ checkfirestore() async {
       someevent.tag = stringToList(value.get("tag"));
       someevent.curnum = int.parse(value.get("currentNum"));
       someevent.maxnum = int.parse(value.get("maxnum"));
-      print(someevent.users);
 
       //タグを追加→arrayなのでgetできない
     });
     events.add(someevent);
-    print(someevent.document);
-    print(events);
   }
-
-  print("clean");
 }
 
 class LunchMeetingPage extends StatefulWidget {
@@ -143,17 +131,12 @@ class _LunchMeetingPageState extends State<LunchMeetingPage> {
     for (String element in mytag) {
       for (var instance in events) {
         for (var tag in instance.tag) {
-          print(tag);
-          print(element);
           if (tag == element) {
             instance.matchtag++;
-            print("object");
-            print(instance.matchtag);
           }
         }
       }
     }
-    print("konni");
 
     events.sort(((a, b) => b.matchtag.compareTo(a.matchtag)));
     setState(() {
@@ -172,7 +155,6 @@ class _LunchMeetingPageState extends State<LunchMeetingPage> {
       setState(() {
         invisibleload = false;
       });
-      print("kvfjaojhfakvfj");
     }
   }
 
@@ -198,8 +180,6 @@ class _LunchMeetingPageState extends State<LunchMeetingPage> {
       },
     );
   }
-
-  
 
   void addwidget(event e) {
     /* if (e.curnum != e.maxnum) { */
@@ -282,13 +262,10 @@ class _LunchMeetingPageState extends State<LunchMeetingPage> {
   }
 
   Future<void> executeAfterBuild() async {
-    print("koooooooooooooooooooooooooooooooooooooooooooooo");
     Future<void> res = checkfirestore();
     res.then((res) {
       items = [];
-
       makewidget(events);
-      print("jhgdia");
       setState(() {
         reloadbytag(mytag);
       });
@@ -314,12 +291,9 @@ class _LunchMeetingPageState extends State<LunchMeetingPage> {
         .then(
           (QuerySnapshot snapshot) => {
             snapshot.docs.forEach((f) {
-              print("documentID---- " + f.reference.id);
               list.add(f.reference.id);
               if (list != []) {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  print("thiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiis");
-                  print(list[0].toString());
                   return Page5(
                     eventkey: list[0].toString(),
                   );
@@ -345,15 +319,10 @@ class _LunchMeetingPageState extends State<LunchMeetingPage> {
 
     setState(() {
       Future(() async {
-   await  executeAfterBuild();
-     // print(events);
-     //await myeventsearch();
- });
-
-     
-
-      print(invisibleload);
-      print(items);
+        await executeAfterBuild();
+        // print(events);
+        //await myeventsearch();
+      });
     });
   }
 

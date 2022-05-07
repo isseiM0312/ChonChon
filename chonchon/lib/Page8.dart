@@ -27,7 +27,7 @@ String ev = "";
 } */
 
 class Page8 extends StatefulWidget {
-  Page8({required this.eventkey,required this.uid});
+  Page8({required this.eventkey, required this.uid});
   String eventkey;
   String uid;
   @override
@@ -73,7 +73,8 @@ class _Page8State extends State<Page8> {
                         onPressed: () {
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
-                            return ChatPage(name, eventkey: widget.eventkey, uid: widget.uid);
+                            return ChatPage(name,
+                                eventkey: widget.eventkey, uid: widget.uid);
                           }));
                         },
                         child: Text(

@@ -98,12 +98,10 @@ class _EventdetailPageState extends State<EventdetailPage> {
         .then(
           (QuerySnapshot snapshot) => {
             snapshot.docs.forEach((f) {
-              print("documentID---- " + f.reference.id);
               list.add(f.reference.id);
               if (list != []) {
                 setState(() {
                   showornot = true;
-                  print("jsfkhgjhghshgkhkfjhsklhjfhklvsjfhlhfk");
                 });
               }
             }),
@@ -277,8 +275,6 @@ Future checkfirestore(String d) async {
 }
 
 whenjoin(String d) async {
-  await FirebaseFirestore.instance
-      .collection("Event")
-      .doc(d)
-      .update({"members": members + "," + uid, "currentNum": (curnum + 1).toString()});
+  await FirebaseFirestore.instance.collection("Event").doc(d).update(
+      {"members": members + "," + uid, "currentNum": (curnum + 1).toString()});
 }

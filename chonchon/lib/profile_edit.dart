@@ -5,10 +5,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+
 class ProfileEditPage extends StatefulWidget {
   @override
   _ProfileEditPageState createState() => _ProfileEditPageState();
 }
+
 class _ProfileEditPageState extends State<ProfileEditPage> {
   // 写真を表示用
   String imgPathUse = '';
@@ -20,7 +22,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   String grade = '未設定';
   // comment表示用
   String comment = '未設定';
-   String uid ="";
+  String uid = "";
   List<String> stringToList(String listAsString) {
     return listAsString.split(',').toList();
   }
@@ -47,6 +49,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
     uid = user!.uid;
     // here you write the codes to input the data into firestore
   }
+
   Future getProfile() async {
     await users.doc(uid).get().then((DocumentSnapshot snapshot) {
       setState(() {
@@ -57,7 +60,6 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
         comment = snapshot.get("comment");
         tagsString = snapshot.get("tagsString");
         tagList = stringToList(tagsString);
-        print(tagsString);
         _chipList = <Chip>[];
         for (var tag in tagList) {
           _addChip(tag);
@@ -65,12 +67,14 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
       });
     });
   }
+
   @override
   void initState() {
     super.initState();
     setLoginInfo();
     _textFieldFocusNode = FocusNode();
   }
+
   Future setLoginInfo() async {
     getUid();
     await getProfile();
@@ -82,11 +86,13 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
       _comment_controller.text = comment;
     });
   }
+
   @override
   void dispose() {
     _textFieldFocusNode.dispose();
     super.dispose();
   }
+
   void _onSubmitted(String text) {
     setState(() {
       _inputController.text = '';
@@ -94,6 +100,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
       FocusScope.of(context).requestFocus(_textFieldFocusNode);
     });
   }
+
   void _addChip(String text) {
     if (text == '') return;
     var chipKey = Key('chip_key_$_keyNumber');
@@ -106,9 +113,11 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
       ),
     );
   }
+
   void _deleteChip(Key chipKey) {
     setState(() => _chipList.removeWhere((Widget w) => w.key == chipKey));
   }
+
   final ImagePicker _picker = ImagePicker();
   late var _image = null;
   File? _file;
@@ -116,15 +125,11 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
     final FirebaseStorage storage = FirebaseStorage.instance;
     Reference imageRef = storage.ref().child("profileImage"); //保存するフォルダ
     io.File file = io.File(sourcePath);
-    print('x');
-    print(uploadFileName);
     //String imageUrl = await imageRef.getDownloadURL();
     //print(imageUrl);
     try {
       await imageRef.child(uploadFileName).putFile(file);
-      print('z');
     } catch (FirebaseException) {
-      print(FirebaseException);
       //エラー処理
     }
   }
@@ -142,7 +147,6 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
               icon: Icon(Icons.done),
               onPressed: () async {
                 final uid = await FirebaseAuth.instance.currentUser!.uid;
-                print(uid);
                 tagsString = '';
                 for (var chip in _chipList) {
                   Text text = chip.label as Text;
