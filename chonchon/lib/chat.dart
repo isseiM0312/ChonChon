@@ -15,12 +15,9 @@ import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
 class ChatPage extends StatefulWidget {
-  const ChatPage(
-    this.name, {
-    Key? key,
-    required this.eventkey,
-    required this.uid
-  }) : super(key: key);
+  const ChatPage(this.name,
+      {Key? key, required this.eventkey, required this.uid})
+      : super(key: key);
   final String eventkey;
   final String name;
   final String uid;
@@ -32,18 +29,25 @@ class _ChatPageState extends State<ChatPage> {
   List<types.Message> _messages = [];
   String randomId = Uuid().v4();
   final _user = types.User(id: uid, firstName: '名前');
+  String keykey = "";
 
   void initState() {
     super.initState();
+    print(widget.eventkey);
+    setState(() {
+      keykey = widget.eventkey;
+    });
   }
 
   // firestoreからメッセージの内容をとってきて_messageにセット
   // firestoreからメッセージの内容をとってきて_messageにセット
-  void _getMessages() async {
+  void _getMessages(String key) async {
+    print("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHello");
+    print(widget.eventkey);
     final getData = await FirebaseFirestore.instance
         .collection('chat_room')
         .doc("チャット")
-        .collection(widget.eventkey)
+        .collection(key) //widget.eventkey
         .get();
 
     final message = getData.docs
@@ -63,10 +67,8 @@ class _ChatPageState extends State<ChatPage> {
     int d = _messages[0].createdAt ?? 0;
     var s = d.toInt();
     if ((DateTime.now().microsecondsSinceEpoch - d) > 600000) {
-      await FirebaseFirestore.instance
-          .collection("Event")
-          .doc(widget.eventkey)
-          .delete();
+      await FirebaseFirestore.instance.collection("Event").doc(widget.eventkey);
+      //  .delete();
     }
   }
 
@@ -151,7 +153,8 @@ class _ChatPageState extends State<ChatPage> {
                   .snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
-                _getMessages();
+                print(widget.eventkey);
+                _getMessages(keykey);
                 //  return  Text(snapshot.data!.docs[0]["messago0"]);
                 /*Message a ;
               

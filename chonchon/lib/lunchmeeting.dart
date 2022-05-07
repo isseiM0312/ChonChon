@@ -56,18 +56,18 @@ class event {
   String eventname = "";
   String time = "";
   int matchtag = 0;
-  List tag = [];
-  int curnum = 0;
-  int maxnum = 0;
+  List<String> tag = [];
+  double curnum = 0;
+  double maxnum = 0;
 
   //event({this.document, this.users, this.eventname, this.time});
 }
 
-List<dynamic> stringToList(String listAsString) {
+List<String> stringToList(String listAsString) {
   return listAsString.split(',').toList();
 }
 
-String Listtostring(List list) {
+String Listtostring(List<String> list) {
   String ane = "";
   for (var e in list) {
     ane = ane + "," + e;
@@ -79,6 +79,7 @@ List events = []; //eventクラスを格納するリス
 const List fields = ["Users", "eventname", "reservation_time"]; //docの下階層の奴の一覧
 List mytag = ["#python"];
 List searchtag = [];
+late List l = [];
 
 //checkfirestoreの実装
 checkfirestore() async {
@@ -103,13 +104,14 @@ checkfirestore() async {
         .collection("Event")
         .doc(document)
         .get()
-        .then((value) {
+        .then((value) async {
       // someevent.users = value.get("Users");
       someevent.time = value.get("reservation_time");
       someevent.eventname = value.get("eventname");
+
       someevent.tag = stringToList(value.get("tag"));
-      someevent.curnum = value.get("currentNum");
-      someevent.maxnum = value.get("maxnum");
+      // someevent.curnum = value.get("currentNum");
+      // someevent.maxnum = value.get("maxnum");
       print(someevent.users);
 
       //タグを追加→arrayなのでgetできない
@@ -160,7 +162,7 @@ class _LunchMeetingPageState extends State<LunchMeetingPage> {
   }
 
   //今あるイベントのウィジェットづくり
-  void makewidget(List nowevent) {
+  void makewidget(List nowevent) async {
     items = [];
     for (var e in nowevent) {
       addwidget(e);
@@ -206,46 +208,45 @@ class _LunchMeetingPageState extends State<LunchMeetingPage> {
 
   Image? _img;
   void addwidget(event e) {
-    if (e.curnum != e.maxnum) {
-      items.add(GestureDetector(
-          onTap: () {
-            //各予約をタップしたときの奴
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return EventdetailPage(
-                title: e.eventname,
-                thiseventkey: e.document,
-                thiseventname: e.eventname,
-              );
-            }));
-            //clicledevent(e);
-            setState(() {});
-          },
-          child: Container(
-            decoration: BoxDecoration(
-                color: Colors.white, border: Border.all(color: Colors.black)),
-            margin: EdgeInsets.all(5),
-            alignment: Alignment.center,
-            height: 100,
-            width: 100,
-            child: Row(
-              children: [
-                Container(
-                    margin: EdgeInsets.all(20),
-                    height: 50,
-                    width: 50,
-                    color: Colors.blue),
-                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  Text(e.eventname),
-                  Text(
-                    Listtostring(e.tag),
-                    style: TextStyle(color: Colors.lightBlue),
-                  )
-                ])
-                //これがボックスのタイトル
-              ],
-            ),
-          )));
-    }
+    /* if (e.curnum != e.maxnum) { */
+    items.add(GestureDetector(
+        onTap: () {
+          //各予約をタップしたときの奴
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return EventdetailPage(
+              title: e.eventname,
+              thiseventkey: e.document,
+              thiseventname: e.eventname,
+            );
+          }));
+          //clicledevent(e);
+          setState(() {});
+        },
+        child: Container(
+          decoration: BoxDecoration(
+              color: Colors.white, border: Border.all(color: Colors.black)),
+          margin: EdgeInsets.all(5),
+          alignment: Alignment.center,
+          height: 100,
+          width: 100,
+          child: Row(
+            children: [
+              Container(
+                  margin: EdgeInsets.all(20),
+                  height: 50,
+                  width: 50,
+                  color: Colors.blue),
+              Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                Text(e.eventname),
+                Text(
+                  Listtostring(e.tag),
+                  style: TextStyle(color: Colors.lightBlue),
+                )
+              ])
+              //これがボックスのタイトル
+            ],
+          ),
+        )));
   }
 
   var selectedcolor = Colors.black;
@@ -301,7 +302,7 @@ class _LunchMeetingPageState extends State<LunchMeetingPage> {
   }
 
   final FirebaseAuth auth = FirebaseAuth.instance;
-  late String uid;
+  String uid = "";
   void getUid() async {
     late User? user = auth.currentUser;
     uid = user!.uid;
@@ -321,8 +322,10 @@ class _LunchMeetingPageState extends State<LunchMeetingPage> {
               list.add(f.reference.id);
               if (list != []) {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  print("thiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiis");
+                  print(list[0].toString());
                   return Page5(
-                    eventkey: list[0],
+                    eventkey: list[0].toString(),
                   );
                 }));
               }
@@ -334,7 +337,7 @@ class _LunchMeetingPageState extends State<LunchMeetingPage> {
         .doc(uid)
         .get()
         .then((value) {
-      mytag = value.get("tagsString");
+      mytag = stringToList(value.get("tagsString"));
     });
   }
 

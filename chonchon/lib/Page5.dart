@@ -25,7 +25,7 @@ class _Page5State extends State<Page5> {
 
   var _timer;
 
-  late int counter;
+  int counter = 0;
   int totalsec = 0;
   int min = 0;
   int sec = 0;
@@ -97,8 +97,7 @@ class _Page5State extends State<Page5> {
         builder:
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.data != null) {
-            if (( (snapshot.data!['currentNum']>=1) &&
-                counter == 0)) {
+            if (((snapshot.data!['currentNum'] >= 1) && counter == 0)) {
               counter++;
               handleEventMaking(); //shift to Page8
             }
@@ -175,17 +174,27 @@ class _Page5State extends State<Page5> {
   }
 
   void handleTimeout() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return Page6(
-        eventkey: widget.eventkey,
-      );
-    }));
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return Page6(
+          eventkey: widget.eventkey,
+        );
+      }));
+    });
   }
 
-  void handleEventMaking() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return Page8(eventkey: widget.eventkey,uid: uid,);
-    }));
+  Future handleEventMaking() async {
+    print("THAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAt");
+    print(widget.eventkey);
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return Page8(
+          eventkey: widget.eventkey,
+          
+          uid: uid,
+        );
+      }));
+    }) ;
     /* showModalBottomSheet(
                     backgroundColor: Colors.grey.withOpacity(0.3),
                     isScrollControlled: true,

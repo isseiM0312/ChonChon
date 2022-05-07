@@ -20,7 +20,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   String grade = '未設定';
   // comment表示用
   String comment = '未設定';
-  late String uid;
+   String uid ="";
   List<String> stringToList(String listAsString) {
     return listAsString.split(',').toList();
   }

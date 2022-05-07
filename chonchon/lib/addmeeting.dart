@@ -16,7 +16,7 @@ Future<void> main() async {
 }
 
 final FirebaseAuth auth = FirebaseAuth.instance;
-late String uid;
+ String uid ="";
 void getUid() async {
   late User? user = auth.currentUser;
   uid = user!.uid;
@@ -47,7 +47,7 @@ class CreateMeetPage extends StatefulWidget {
   State<CreateMeetPage> createState() => _CreateMeetPageState();
 }
 
-List taglist = [];
+List<String> taglist = [];
 String eventkey = "";
 
 class _CreateMeetPageState extends State<CreateMeetPage> {
@@ -78,7 +78,7 @@ class _CreateMeetPageState extends State<CreateMeetPage> {
         .doc(uid)
         .get()
         .then((value) {
-      mytag = value.get("tagsString");
+      mytag =stringToList(value.get("tagsString")) ;
     });
   }
 
@@ -108,7 +108,7 @@ class _CreateMeetPageState extends State<CreateMeetPage> {
       'reservation_time': reservetime,
       'createdtime': createdtime,
       'maxnum': maxnum,
-      'currentNum': 0,
+      'currentNum': 1,
       'tag': finaltag
     });
     print(eventkey);
@@ -182,8 +182,8 @@ class _CreateMeetPageState extends State<CreateMeetPage> {
     setState(() => _chipList.removeWhere((Widget w) => w.key == chipKey));
   }
 
-  void caltimepicker() {
-    DatePicker.showTimePicker(
+  void caltimepicker() async {
+   await DatePicker.showTimePicker(
       context,
       showTitleActions: true,
 

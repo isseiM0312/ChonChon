@@ -17,7 +17,7 @@ Future<void> main() async {
 }
 
 final FirebaseAuth auth = FirebaseAuth.instance;
- String uid = "";
+String uid = "";
 void getUid() async {
   late User? user = auth.currentUser;
   uid = user!.uid;
@@ -109,12 +109,30 @@ class _EventdetailPageState extends State<EventdetailPage> {
             }),
           },
         );
+     await FirebaseFirestore.instance
+        .collection("Event")
+        .where('', whereIn: [uid])
+        .get()
+        .then(
+          (QuerySnapshot snapshot) => {
+            snapshot.docs.forEach((f) {
+              print("documentID---- " + f.reference.id);
+              list.add(f.reference.id);
+              if (list != []) {
+                setState(() {
+                  showornot = true;
+                  print("jsfkhgjhghshgkhkfjhsklhjfhklvsjfhlhfk");
+                });
+              }
+            }),
+          },
+        );
     await FirebaseFirestore.instance
         .collection("users")
         .doc(uid)
         .get()
         .then((value) {
-      mytag = value.get("tagsString");
+      mytag = stringToList(value.get("tagsString"));
     });
   }
 
@@ -168,62 +186,59 @@ class _EventdetailPageState extends State<EventdetailPage> {
               onPressed: () {
                 Future<void> res = whenjoin(widget.thiseventkey);
                 res.then((res) {
-                  if (showornot) {
-                    showModalBottomSheet(
-                      backgroundColor: Colors.grey.withOpacity(0.3),
-                      isScrollControlled: true,
-                      context: context,
-                      builder: (context) {
-                        return Container(
-                            height: 900,
-                            child: Container(
-                              margin: EdgeInsets.all(30),
-                              child: Column(
-                                children: [
-                                  Container(
-                                      margin: EdgeInsets.only(top: 100),
+                  showModalBottomSheet(
+                    backgroundColor: Colors.grey.withOpacity(0.3),
+                    isScrollControlled: true,
+                    context: context,
+                    builder: (context) {
+                      return Container(
+                          height: 900,
+                          child: Container(
+                            margin: EdgeInsets.all(30),
+                            child: Column(
+                              children: [
+                                Container(
+                                    margin: EdgeInsets.only(top: 100),
+                                    child: Text(
+                                      "Joined!",
+                                      style: TextStyle(
+                                          fontSize: 90, color: Colors.white),
+                                    )),
+                                Container(
+                                  height: 50,
+                                ),
+                                Row(
+                                  children: [usericons(), usericons()],
+                                ),
+                                Container(height: 50),
+                                SizedBox(
+                                    height: 70,
+                                    width: 200,
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        primary: Colors.orange, // background
+                                        onPrimary: Colors.white, // foreground
+                                      ),
+                                      onPressed: () => Navigator.push(context,
+                                          MaterialPageRoute(builder: (context) {
+                                        return ChatPage(
+                                          "チャット",
+                                          eventkey: widget.thiseventkey,
+                                          uid: uid,
+                                        );
+                                      })),
                                       child: Text(
-                                        "Joined!",
-                                        style: TextStyle(
-                                            fontSize: 90, color: Colors.white),
-                                      )),
-                                  Container(
-                                    height: 50,
-                                  ),
-                                  Row(
-                                    children: [usericons(), usericons()],
-                                  ),
-                                  Container(height: 50),
-                                  SizedBox(
-                                      height: 70,
-                                      width: 200,
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          primary: Colors.orange, // background
-                                          onPrimary: Colors.white, // foreground
-                                        ),
-                                        onPressed: () => Navigator.push(context,
-                                            MaterialPageRoute(
-                                                builder: (context) {
-                                          return ChatPage(
-                                            "チャット",
-                                            eventkey: widget.thiseventkey,
-                                            uid: uid,
-                                          );
-                                        })),
-                                        child: Text(
-                                          'チャット',
-                                          style: TextStyle(fontSize: 30),
-                                        ),
-                                      ))
-                                ],
-                              ),
-                              //  Navigator.pop(context),
-                              //color: Colors.grey.withOpacity(0.5),
-                            ));
-                      },
-                    );
-                  }
+                                        'チャット',
+                                        style: TextStyle(fontSize: 30),
+                                      ),
+                                    ))
+                              ],
+                            ),
+                            //  Navigator.pop(context),
+                            //color: Colors.grey.withOpacity(0.5),
+                          ));
+                    },
+                  );
                 });
               })),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -232,9 +247,10 @@ class _EventdetailPageState extends State<EventdetailPage> {
 }
 
 String re = "";
-String name = "";
+String name = "チャット";
 List tags = [];
 String members = "";
+var curnum;
 
 String bluetag(List tag) {
   String ans = "";
@@ -256,6 +272,7 @@ Future checkfirestore(String d) async {
     name = value.get("eventname");
     tags = stringToList(value.get("tag"));
     members = value.get("members");
+    curnum = value.get("currentNum");
   });
 }
 
@@ -263,5 +280,5 @@ whenjoin(String d) async {
   await FirebaseFirestore.instance
       .collection("Event")
       .doc(d)
-      .update({"members": members + "," + uid});
+      .update({"members": members + "," + uid, "currentNum": curnum + 1});
 }
