@@ -1,7 +1,29 @@
+import 'package:chonchon/profile_edit.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'profile.dart';
+import 'lunchmeeting.dart';
+import 'addmeeting.dart';
+import 'profile.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() => runApp(const BottomBar());
+
+
+Future<void> main() async {
+  // Fireabse初期化
+  await WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(const BottomBar());
+}
+
+
+final FirebaseAuth auth = FirebaseAuth.instance;
+String uid = "";
+void getUid() async {
+  late User? user = auth.currentUser;
+  uid = user!.uid;
+}
 
 class BottomBar extends StatelessWidget {
   const BottomBar({Key? key}) : super(key: key);
@@ -28,19 +50,10 @@ class _BottomBarState extends State<BottomBarWidget> {
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Index 0: Home',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 1: Business',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 2: School',
-      style: optionStyle,
-    ),
+  static List<Widget> _widgetOptions = <Widget>[
+    LunchMeetingApp(),
+    CreateMeet(),
+   ProfileEditPage(),
     Text(
       'Index 3: Settings',
       style: optionStyle,
@@ -53,12 +66,31 @@ class _BottomBarState extends State<BottomBarWidget> {
     });
   }
 
+  Future myeventsearch() async {
+    await Firebase.initializeApp();
+    await FirebaseFirestore.instance
+        .collection("Event")
+        .where('host', whereIn: [uid])
+        .get()
+        .then(
+          (QuerySnapshot snapshot) => {
+            snapshot.docs.forEach((f) {
+              print("documentID---- " + f.reference.id);
+            }),
+          },
+        );
+  }
+
+  void initstate() {
+    getUid();
+    super.initState();
+    
+  }
+
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('BottomNavigationBar Sample'),
-      ),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
