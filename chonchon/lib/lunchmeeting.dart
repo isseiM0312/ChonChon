@@ -60,7 +60,6 @@ class event {
   int curnum = 0;
   int maxnum = 0;
 
-
   //event({this.document, this.users, this.eventname, this.time});
 }
 
@@ -112,7 +111,7 @@ checkfirestore() async {
 
       someevent.tag = stringToList(value.get("tag"));
       someevent.curnum = int.parse(value.get("currentNum"));
-     someevent.maxnum = int.parse(value.get("maxnum"));
+      someevent.maxnum = int.parse(value.get("maxnum"));
       print(someevent.users);
 
       //タグを追加→arrayなのでgetできない
@@ -200,14 +199,8 @@ class _LunchMeetingPageState extends State<LunchMeetingPage> {
     );
   }
 
-  Future testforimg() async {
-    FirebaseStorage storage = FirebaseStorage.instance;
-    Reference imageRef = storage.ref().child("じじい.png");
-    String imageUrl = await imageRef.getDownloadURL();
-    _img = Image.network(imageUrl);
-  }
+  
 
-  Image? _img;
   void addwidget(event e) {
     /* if (e.curnum != e.maxnum) { */
     items.add(GestureDetector(
@@ -289,9 +282,11 @@ class _LunchMeetingPageState extends State<LunchMeetingPage> {
   }
 
   Future<void> executeAfterBuild() async {
+    print("koooooooooooooooooooooooooooooooooooooooooooooo");
     Future<void> res = checkfirestore();
     res.then((res) {
       items = [];
+
       makewidget(events);
       print("jhgdia");
       setState(() {
@@ -346,11 +341,16 @@ class _LunchMeetingPageState extends State<LunchMeetingPage> {
   @override
   void initState() {
     super.initState();
-    getUid();
+    //getUid();
 
     setState(() {
-      executeAfterBuild();
-      myeventsearch();
+      Future(() async {
+   await  executeAfterBuild();
+     // print(events);
+     //await myeventsearch();
+ });
+
+     
 
       print(invisibleload);
       print(items);

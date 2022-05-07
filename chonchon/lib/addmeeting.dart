@@ -120,7 +120,7 @@ class _CreateMeetPageState extends State<CreateMeetPage> {
   String reservetime = "";
   String createdtime = "";
   String member = "";
-  double maxnum = 0;
+  String maxnum = "";
   String citchat = "";
   String tag = "";
   String finaltag = "";
@@ -182,8 +182,9 @@ class _CreateMeetPageState extends State<CreateMeetPage> {
     setState(() => _chipList.removeWhere((Widget w) => w.key == chipKey));
   }
 
-  void caltimepicker() async {
-   await DatePicker.showTimePicker(
+  void caltimepicker() {
+    DatePicker.showTimePicker(
+      
       context,
       showTitleActions: true,
 
@@ -248,8 +249,8 @@ class _CreateMeetPageState extends State<CreateMeetPage> {
               ),
               Container(child: Text(reservetime), width: 250),
               IconButton(
-                  onPressed: () {
-                    caltimepicker;
+                  onPressed: () async {
+                   await caltimepicker;
                   },
                   icon: Icon(Icons.timer))
             ],
@@ -264,10 +265,10 @@ class _CreateMeetPageState extends State<CreateMeetPage> {
               ),
               Container(
                   child: TextField(onChanged: (value) {
-                    double hoge;
+                    int hoge;
                     try {
-                      hoge = double.parse(value);
-                      maxnum = hoge;
+                      hoge = int.parse(value);
+                      maxnum = hoge.toString();
                     } catch (exception) {}
                   }),
                   width: 300)
