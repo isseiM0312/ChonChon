@@ -27,7 +27,8 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
 
   // comment表示用
   String comment = '未設定';
-  late String uid;
+
+  String imagePathLocal = "";
 
   List<String> stringToList(String listAsString) {
     return listAsString.split(',').toList();
@@ -52,6 +53,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   late var _chipList = <Chip>[];
   var _keyNumber = 0;
 
+  late String uid;
   void getUid() async {
     late User? user = auth.currentUser;
     uid = user!.uid;
@@ -61,7 +63,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   Future getProfile() async {
     await users.doc(uid).get().then((DocumentSnapshot snapshot) {
       setState(() {
-        imgPathUse = snapshot.get("imgPathUse");
+        //imgPathUse = snapshot.get("imgPathUse");
         name = snapshot.get("name");
         major = snapshot.get("major");
         grade = snapshot.get("grade");
@@ -73,6 +75,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
         for (var tag in tagList) {
           _addChip(tag);
         }
+        imagePathLocal = snapshot.get("imagePathLocal");
       });
     });
   }
@@ -80,6 +83,9 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   @override
   void initState() {
     super.initState();
+    setState(() {
+      if (imagePathLocal != '') _file = File(imagePathLocal);
+    });
     setLoginInfo();
     _textFieldFocusNode = FocusNode();
   }
@@ -140,8 +146,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
 
     print('x');
     print(uploadFileName);
-    //String imageUrl = await imageRef.getDownloadURL();
-    //print(imageUrl);
+    print(imageRef);
 
     try {
       await imageRef.child(uploadFileName).putFile(file);
@@ -151,6 +156,32 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
       //エラー処理
     }
   }
+
+  /*Future<String> _getImgs(String imgPathLocal) async {
+    bool existLocal = await io.File(imgPathLocal).exists();
+    String imgPathUse = "";
+
+    if (existLocal) {
+      //ローカルに存在する場合はローカルの画像を使う
+      imgPathUse = imgPathLocal;
+    } else {
+      if ((imgPathRemote != "") && (imgPathRemote != null)) {
+        try {
+          //ローカルに存在しない場合はリモートのデータをダウンロード
+          imgPathUse = await FirebaseStorage.instance
+              .ref()
+              .child("images")
+              .child(uid)
+              .getDownloadURL();
+        } catch (FirebaseException) {
+          imgPathUse = "";
+        }
+      } else {
+        imgPathUse = "";
+      }
+    }
+    return imgPathUse;
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -181,8 +212,9 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                   'tagsString': tagsString,
 
                   //いったんimagepathuse
-                  'imgPathUse': '',
+                  if (_image != null) 'imagePathLocal': _image!.path,
                 });
+                print(_image!.path);
                 uploadFile(_image!.path, uid);
                 // Firestore.instance.collection("todos")document("1").setData({
                 //   "title": "test",

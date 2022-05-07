@@ -38,6 +38,8 @@ class _ProfilePageState extends State<ProfilePage> {
   // comment表示用
   String comment = '';
 
+  String imagePathLocal = '';
+
   late String uid;
 
   //firestoreのcollection("users")へのリファレンス
@@ -70,9 +72,20 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           );
         }
+        imagePathLocal = snapshot.get("imagePathLocal");
       });
     });
   }
+
+  Future<void> _downloadFile(String imgPath) async {
+    // download path
+    StorageReference ref = widget.storage.ref().child('images/$imgPath');
+    final String url = await ref.getDownloadURL();
+    final img = new Image(image: new CachedNetworkImageProvider(url));
+
+    setState(() {
+      _image = img;
+    });
 
   @override
   void initState() {
@@ -108,6 +121,14 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            if (imagePathLocal != '')
+              AspectRatio(
+                aspectRatio: 1,
+                child: Image.file(
+                  File(imagePathLocal),
+                  fit: BoxFit.cover,
+                ),
+              ),
             Text(name),
             Text(major),
             Text(grade),
