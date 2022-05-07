@@ -57,8 +57,9 @@ class event {
   String time = "";
   int matchtag = 0;
   List<String> tag = [];
-  double curnum = 0;
-  double maxnum = 0;
+  int curnum = 0;
+  int maxnum = 0;
+
 
   //event({this.document, this.users, this.eventname, this.time});
 }
@@ -110,8 +111,8 @@ checkfirestore() async {
       someevent.eventname = value.get("eventname");
 
       someevent.tag = stringToList(value.get("tag"));
-      // someevent.curnum = value.get("currentNum");
-      // someevent.maxnum = value.get("maxnum");
+      someevent.curnum = int.parse(value.get("currentNum"));
+     someevent.maxnum = int.parse(value.get("maxnum"));
       print(someevent.users);
 
       //タグを追加→arrayなのでgetできない

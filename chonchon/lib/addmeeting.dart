@@ -107,8 +107,8 @@ class _CreateMeetPageState extends State<CreateMeetPage> {
       'eventname': name,
       'reservation_time': reservetime,
       'createdtime': createdtime,
-      'maxnum': maxnum,
-      'currentNum': 1,
+      'maxnum': maxnum.toString(),
+      'currentNum': "1",
       'tag': finaltag
     });
     print(eventkey);

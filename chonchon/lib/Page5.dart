@@ -97,7 +97,7 @@ class _Page5State extends State<Page5> {
         builder:
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.data != null) {
-            if (((snapshot.data!['currentNum'] >= 1) && counter == 0)) {
+            if (((int.parse(snapshot.data!['currentNum']) >= 2) && counter == 0)) {
               counter++;
               handleEventMaking(); //shift to Page8
             }

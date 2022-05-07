@@ -272,7 +272,7 @@ Future checkfirestore(String d) async {
     name = value.get("eventname");
     tags = stringToList(value.get("tag"));
     members = value.get("members");
-    curnum = value.get("currentNum");
+    curnum = int.parse(value.get("currentNum"));
   });
 }
 
@@ -280,5 +280,5 @@ whenjoin(String d) async {
   await FirebaseFirestore.instance
       .collection("Event")
       .doc(d)
-      .update({"members": members + "," + uid, "currentNum": curnum + 1});
+      .update({"members": members + "," + uid, "currentNum": (curnum + 1).toString()});
 }
