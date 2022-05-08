@@ -1,10 +1,29 @@
 import 'dart:io' as io;
 import 'dart:io';
+
+import 'package:chonchon/bottomnavigationbar.dart';
+import 'package:chonchon/lunchmeeting.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+
+import 'dart:io';
+import 'dart:io' as io;
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:chonchon/profile_edit.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+
 
 class ProfileEditPage extends StatefulWidget {
   @override
@@ -72,6 +91,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   void initState() {
     super.initState();
     setLoginInfo();
+
     _textFieldFocusNode = FocusNode();
   }
 
@@ -84,6 +104,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
       _major_controller.text = major;
       _grade_controller.text = grade;
       _comment_controller.text = comment;
+      _downloadFile(uid);
     });
   }
 
@@ -134,6 +155,21 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
     }
   }
 
+  final ImagePicker _picker2 = ImagePicker();
+  Image _image2 = Image.asset("assets/images/noimage.png");
+  File? _file2;
+  Future<void> _downloadFile(String imgPath) async {
+    // download path
+    await Firebase.initializeApp();
+
+    Reference ref =
+        await FirebaseStorage.instance.ref().child('profileImage/$imgPath');
+    final String url = await ref.getDownloadURL();
+    setState(() {
+      _image2 = Image.network(url);
+    });
+  }
+
   bool isVisible = true;
 
   @override
@@ -170,6 +206,9 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                 //   "limitDay": Datetime.now()
                 // });
                 Navigator.pop(context, true);
+                /*  Navigator.push(context, MaterialPageRoute(builder: ((context) {
+                  return BottomBarWidget();
+                }))); */
               }),
         ],
       ),
@@ -178,22 +217,38 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Visibility(
-              child: Image.asset("assets/images/noimage.png"),
+              child: //_image2
+                Container(
+                  width: 150.0,
+                  height: 150.0,
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(75),
+                      child: _image2,
+                )),
+              
               visible: isVisible,
             ),
 
             if (_file != null)
               AspectRatio(
                 aspectRatio: 1,
-                child: Image.file(
+                child:
+                Container(
+                  width: 150.0,
+                  height: 150.0,
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(75),
+                      child: Image.file(
                   _file!,
                   fit: BoxFit.cover,
                 ),
+                )),
+                 
               ),
             OutlinedButton(
                 onPressed: () async {
                   setState(toggleHiddenImage);
-                  _image = await _picker.getImage(source: ImageSource.gallery);
+                  _image = await _picker.pickImage(source: ImageSource.gallery);
                   if (_image == null) {
                     setState(toggleHiddenImage);
                   }

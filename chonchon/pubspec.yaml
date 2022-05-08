@@ -35,10 +35,11 @@ dependencies:
   cloud_firestore_web: ^2.6.13
   firebase_storage: ^8.0.5
   path_provider: ^2.0.1
-  image_picker: ^0.7.4
+  image_picker: ^0.8.5
   flutter_chat_ui: ^1.2.0
   flutter_datetime_picker: ^1.2.1 # これを追記して保存
   intl: any
+  cached_network_image: any
 
 
 

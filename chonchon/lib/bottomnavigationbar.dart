@@ -50,7 +50,10 @@ class _BottomBarState extends State<BottomBarWidget> {
   static List<Widget> _widgetOptions = <Widget>[
     LunchMeetingApp(),
     CreateMeet(),
-    ProfileEditPage(),
+
+    ProfilePage(),
+  // ProfileEditPage(),
+
     Text(
       'Index 3: Settings',
       style: optionStyle,

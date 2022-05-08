@@ -1,5 +1,7 @@
 import 'dart:math';
-
+import 'dart:io' as io;
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -44,16 +46,57 @@ class EventdetailPage extends StatefulWidget {
   State<EventdetailPage> createState() => _EventdetailPageState();
 }
 
+List<Widget> users = [];
+
 class _EventdetailPageState extends State<EventdetailPage> {
-  Widget usericons() {
+  getuserinfo() async {
+    String host = "";
+    List members = [];
+    List uidlist = [];
+    await Firebase.initializeApp();
+    await FirebaseFirestore.instance
+        .collection("Event")
+        .doc(widget.thiseventkey)
+        .get()
+        .then((value) async {
+      host = value.get("host");
+      members = stringToList(value.get("members"));
+      uidlist = [host, ...members];
+      print(uidlist);
+      for (String uid in uidlist) {
+        await FirebaseFirestore.instance
+            .collection("users")
+            .doc(uid)
+            .get()
+            .then(((value) {
+          users.add(usericons(value.get("name"), value.get("imgPathUse")));
+        }));
+      }
+    });
+  }
+
+  Widget usericons(String name, String url) {
+    late var _imaeg = null;
+    File? _file = null;
+    // _file = File(_image!.path);
+    setState(() {});
     return Container(
       margin: EdgeInsets.only(right: 30, left: 30, top: 30),
       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Icon(
+        /* Icon(
           Icons.people,
           size: 50,
-        ),
-        Container(margin: EdgeInsets.all(5), child: Text("ユーザー名"))
+        ), */
+
+        if (_file != null)
+          AspectRatio(
+            aspectRatio: 1,
+            child: Image.file(
+              _file!,
+              fit: BoxFit.cover,
+            ),
+          ),
+        Container(margin: EdgeInsets.all(5), child: Text(name))
       ]),
     );
   }
@@ -139,6 +182,7 @@ class _EventdetailPageState extends State<EventdetailPage> {
     super.initState();
     getUid();
     myeventsearch();
+    getuserinfo();
     setState(() {
       checkfirestore(widget.thiseventkey);
     });
@@ -158,9 +202,11 @@ class _EventdetailPageState extends State<EventdetailPage> {
             child: Column(
               children: [
                 Text("Member"),
-                Row(
-                  children: [usericons(), usericons()],
-                )
+                SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: users,
+                    ))
               ],
             )),
         Container(
@@ -168,7 +214,7 @@ class _EventdetailPageState extends State<EventdetailPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             eventinfo("Time", "  " + re),
-            eventinfo("Max", "  " + "s"),
+            eventinfo("Max", "  " + maxnum),
             eventinfo("Tags", "  " + bluetag(tags))
           ],
         ))
@@ -205,8 +251,9 @@ class _EventdetailPageState extends State<EventdetailPage> {
                                 Container(
                                   height: 50,
                                 ),
-                                Row(
-                                  children: [usericons(), usericons()],
+                                SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(children: users),
                                 ),
                                 Container(height: 50),
                                 SizedBox(
@@ -249,6 +296,7 @@ String name = "チャット";
 List tags = [];
 String members = "";
 var curnum;
+String maxnum = "";
 
 String bluetag(List tag) {
   String ans = "";
@@ -271,6 +319,7 @@ Future checkfirestore(String d) async {
     tags = stringToList(value.get("tag"));
     members = value.get("members");
     curnum = int.parse(value.get("currentNum"));
+    maxnum = value.get("maxnum");
   });
 }
 
