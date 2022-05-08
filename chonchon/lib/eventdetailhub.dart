@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:chonchon/eventdetail.dart';
 import 'package:chonchon/chat.dart';
 
-
 /* void main() {
   runApp(MyApp());
 } */
@@ -35,9 +34,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   // ボトムメニューの遷移先画面
   var _pages = [
-   EventdetailPage(title: "イベント詳細", thiseventkey: "thiseventkey", thiseventname: "thiseventname")
-   ,
-   ChatPage(name, eventkey: eventkey, uid: uid)
+    EventdetailPage(
+        title: "イベント詳細",
+        thiseventkey: "thiseventkey",
+        thiseventname: "thiseventname"),
+    ChatPage(name, eventkey: eventkey, uid: uid)
   ];
   @override
   void initState() {

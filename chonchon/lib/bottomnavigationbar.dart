@@ -8,15 +8,12 @@ import 'profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-
-
 Future<void> main() async {
   // Fireabse初期化
   await WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(const BottomBar());
 }
-
 
 final FirebaseAuth auth = FirebaseAuth.instance;
 String uid = "";
@@ -53,8 +50,10 @@ class _BottomBarState extends State<BottomBarWidget> {
   static List<Widget> _widgetOptions = <Widget>[
     LunchMeetingApp(),
     CreateMeet(),
+
     ProfilePage(),
   // ProfileEditPage(),
+
     Text(
       'Index 3: Settings',
       style: optionStyle,
@@ -75,9 +74,7 @@ class _BottomBarState extends State<BottomBarWidget> {
         .get()
         .then(
           (QuerySnapshot snapshot) => {
-            snapshot.docs.forEach((f) {
-              print("documentID---- " + f.reference.id);
-            }),
+            snapshot.docs.forEach((f) {}),
           },
         );
   }
@@ -85,12 +82,10 @@ class _BottomBarState extends State<BottomBarWidget> {
   void initstate() {
     getUid();
     super.initState();
-    
   }
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),

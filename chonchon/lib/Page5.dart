@@ -39,9 +39,7 @@ class _Page5State extends State<Page5> {
         .get()
         .then((value) {
       createdtime = DateTime.parse(value.get("createdtime"));
-      print("hello!");
 
-      print(createdtime);
       totalsec = timecal(createdtime);
       min = extractmin(totalsec);
       sec = totalsec - min * 60;
@@ -49,8 +47,6 @@ class _Page5State extends State<Page5> {
       int s = sec;
       min = 59 - m;
       sec = 60 - s;
-      print(min);
-      print(sec);
 
       final invDuration = Duration(
           minutes: min, //invDurationArray[0],
@@ -97,7 +93,8 @@ class _Page5State extends State<Page5> {
         builder:
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.data != null) {
-            if (((int.parse(snapshot.data!['currentNum']) >= 2) && counter == 0)) {
+            if (((int.parse(snapshot.data!['currentNum']) >= 2) &&
+                counter == 0)) {
               counter++;
               handleEventMaking(); //shift to Page8
             }
@@ -184,17 +181,14 @@ class _Page5State extends State<Page5> {
   }
 
   Future handleEventMaking() async {
-    print("THAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAt");
-    print(widget.eventkey);
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       Navigator.push(context, MaterialPageRoute(builder: (context) {
         return Page8(
           eventkey: widget.eventkey,
-          
           uid: uid,
         );
       }));
-    }) ;
+    });
     /* showModalBottomSheet(
                     backgroundColor: Colors.grey.withOpacity(0.3),
                     isScrollControlled: true,

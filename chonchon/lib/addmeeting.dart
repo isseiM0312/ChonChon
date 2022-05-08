@@ -61,7 +61,6 @@ class _CreateMeetPageState extends State<CreateMeetPage> {
         .then(
           (QuerySnapshot snapshot) => {
             snapshot.docs.forEach((f) {
-              print("documentID---- " + f.reference.id);
               list.add(f.reference.id);
               if (list != []) {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -83,9 +82,7 @@ class _CreateMeetPageState extends State<CreateMeetPage> {
   }
 
   addevent() async {
-    print("dd");
     await Firebase.initializeApp();
-    print("clean");
     DateTime createddatetime = DateTime.now();
     createdtime = createddatetime.toString();
     /*
@@ -111,9 +108,6 @@ class _CreateMeetPageState extends State<CreateMeetPage> {
       'currentNum': "1",
       'tag': finaltag
     });
-    print(eventkey);
-
-    print("fin");
   }
 
   String name = "";
@@ -188,9 +182,7 @@ class _CreateMeetPageState extends State<CreateMeetPage> {
       showTitleActions: true,
 
       // onChanged内の処理はDatepickerの選択に応じて毎回呼び出される
-      onChanged: (date) {
-        // print('change $date');
-      },
+      onChanged: (date) {},
       // onConfirm内の処理はDatepickerで選択完了後に呼び出される
       onConfirm: (date) {
         setState(() {
@@ -248,9 +240,11 @@ class _CreateMeetPageState extends State<CreateMeetPage> {
               ),
               Container(child: Text(reservetime), width: 250),
               IconButton(
+
                   onPressed: () {
                     print("HHHHHHHHHHHHHHHHHHHHHHHHey");
                     caltimepicker();
+
                   },
                   icon: Icon(Icons.timer))
             ],
@@ -309,18 +303,14 @@ class _CreateMeetPageState extends State<CreateMeetPage> {
               IconButton(
                   onPressed: (() {
                     tagooverrapded = false;
-                    print(taglist);
                     for (var a in taglist) {
                       if (a == tag) {
                         tagooverrapded = true;
                       }
                     }
-                    print("cd");
-                    print(tagooverrapded);
                     if (tagooverrapded == false) {
                       if (tag != "") {
                         _onSubmitted(tag);
-                        print("tintin");
                         taglist.add(tag);
                         tag = "";
                         //ここだとけされたあとのやつになってる
@@ -356,9 +346,7 @@ class _CreateMeetPageState extends State<CreateMeetPage> {
                 onPressed: () {
                   finaltag = Listtostring(taglist);
                   Future<void> res = addevent();
-                  res.then((value) {
-                    print("conp");
-                  });
+                  res.then((value) {});
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return Page5(
                       eventkey: eventkey,

@@ -23,7 +23,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     /*  appBar: AppBar(
+      /*  appBar: AppBar(
         title: const Text("Log in"),
         backgroundColor: Colors.white,
         titleTextStyle: const TextStyle(
@@ -79,7 +79,7 @@ class _LoginPageState extends State<LoginPage> {
                         // プロフィール画面に遷移＋ログイン画面を破棄
                         await Navigator.of(context).pushReplacement(
                           MaterialPageRoute(builder: (context) {
-                             return ProfileEditPage();
+                            return ProfileEditPage();
                           }),
                         );
                       } catch (e) {

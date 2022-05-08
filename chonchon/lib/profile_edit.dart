@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+
 import 'dart:io';
 import 'dart:io' as io;
 import 'package:image_picker/image_picker.dart';
@@ -22,6 +23,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+
 
 class ProfileEditPage extends StatefulWidget {
   @override
@@ -77,7 +79,6 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
         comment = snapshot.get("comment");
         tagsString = snapshot.get("tagsString");
         tagList = stringToList(tagsString);
-        print(tagsString);
         _chipList = <Chip>[];
         for (var tag in tagList) {
           _addChip(tag);
@@ -145,15 +146,11 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
     final FirebaseStorage storage = FirebaseStorage.instance;
     Reference imageRef = storage.ref().child("profileImage"); //保存するフォルダ
     io.File file = io.File(sourcePath);
-    print('x');
-    print(uploadFileName);
     //String imageUrl = await imageRef.getDownloadURL();
     //print(imageUrl);
     try {
       await imageRef.child(uploadFileName).putFile(file);
-      print('z');
     } catch (FirebaseException) {
-      print(FirebaseException);
       //エラー処理
     }
   }
@@ -186,7 +183,6 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
               icon: Icon(Icons.done),
               onPressed: () async {
                 final uid = await FirebaseAuth.instance.currentUser!.uid;
-                print(uid);
                 tagsString = '';
                 for (var chip in _chipList) {
                   Text text = chip.label as Text;

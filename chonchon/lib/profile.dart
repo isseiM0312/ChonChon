@@ -13,10 +13,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
+
 class ProfilePage extends StatefulWidget {
+
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
+
 
 class _ProfilePageState extends State<ProfilePage> {
   //List<String> tags = ["python", "swift", "dart", "flutter"];
@@ -93,6 +96,7 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
+
   @override
   void initState() {
     super.initState();
@@ -109,6 +113,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+
         title: Text('マイページ'),
         actions: [
           IconButton(
@@ -249,6 +254,7 @@ class _ProfilePageState extends State<ProfilePage> {
             )
           ],
         ),
+
       ),
     );
   }

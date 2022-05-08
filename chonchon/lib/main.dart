@@ -58,23 +58,18 @@ class _MyHomePageState extends State<MyHomePage> {
   String yourmail = "";
 
   void coms() async {
-    print("start");
     await Firebase.initializeApp();
-    print("clean");
     await FirebaseFirestore.instance
         .collection('User')
         .doc('D1GKO8M8XrqA5Dh9Up5T')
         .get()
-        .then((value) {
-      print(value.get("name"));
-    });
+        .then((value) {});
     /*.set({
       'event': '合コン',
       'gender': 'male',
       'mail': 'isseieikisouya@outlook.jp',
       'name': '森一晟亜種',
       'studentnumber': 0303030303*/
-    print("finished");
   }
 
   @override
