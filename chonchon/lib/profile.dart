@@ -13,13 +13,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-
 class ProfilePage extends StatefulWidget {
-
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
-
 
 class _ProfilePageState extends State<ProfilePage> {
   //List<String> tags = ["python", "swift", "dart", "flutter"];
@@ -96,7 +93,6 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
-
   @override
   void initState() {
     super.initState();
@@ -113,7 +109,6 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-
         title: Text('マイページ'),
         actions: [
           IconButton(
@@ -134,6 +129,7 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            const SizedBox(height: 20),
             if (_image == null)
               Expanded(
                 child: Container(
@@ -148,12 +144,13 @@ class _ProfilePageState extends State<ProfilePage> {
               SizedBox(
                 width: 150,
                 height: 150,
-                child: AspectRatio(aspectRatio: 1,
-                 child: ClipRRect(
-                      borderRadius: BorderRadius.circular(75),
-                      child:  _image),
-               ),
+                child: AspectRatio(
+                  aspectRatio: 1,
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(75), child: _image),
+                ),
               ),
+            const SizedBox(height: 20),
             Text(
               "名前",
               style: TextStyle(fontSize: 16),
@@ -214,21 +211,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Expanded(
-                  child: Wrap(
-                    alignment: WrapAlignment.start,
-                    spacing: 8.0,
-                    runSpacing: 0.0,
-                    direction: Axis.horizontal,
-                    children: _chipList,
-                  ),
-                ),
-              ],
-            ),
             Container(
               padding: EdgeInsets.only(left: 40, top: 5, right: 40),
               child: Row(
@@ -254,7 +236,6 @@ class _ProfilePageState extends State<ProfilePage> {
             )
           ],
         ),
-
       ),
     );
   }

@@ -240,11 +240,9 @@ class _CreateMeetPageState extends State<CreateMeetPage> {
               ),
               Container(child: Text(reservetime), width: 250),
               IconButton(
-
                   onPressed: () {
                     print("HHHHHHHHHHHHHHHHHHHHHHHHey");
                     caltimepicker();
-
                   },
                   icon: Icon(Icons.timer))
             ],
@@ -335,205 +333,32 @@ class _CreateMeetPageState extends State<CreateMeetPage> {
               ),
             ],
           ),
+          const SizedBox(height: 90),
+          ElevatedButton(
+            onPressed: () {
+              finaltag = Listtostring(taglist);
+              Future<void> res = addevent();
+              res.then((value) {});
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return Page5(
+                  eventkey: eventkey,
+                );
+              }));
+            },
+            child: const Text('Create new meeting',
+                style: TextStyle(color: Colors.blueAccent)),
+            style: ElevatedButton.styleFrom(
+                primary: Colors.white,
+                onPrimary: Colors.blue,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                padding: const EdgeInsets.only(
+                    top: 20, bottom: 20, right: 40, left: 40),
+                textStyle: const TextStyle(fontSize: 25),
+                side: const BorderSide()),
+          ),
         ],
       ))),
-      floatingActionButton: Visibility(
-          visible: noselecting,
-          child: SizedBox(
-            child: FloatingActionButton(
-                child: Text("作成"),
-                heroTag: 40,
-                onPressed: () {
-                  finaltag = Listtostring(taglist);
-                  Future<void> res = addevent();
-                  res.then((value) {});
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return Page5(
-                      eventkey: eventkey,
-                    );
-                  }));
-                }),
-            width: 100,
-            height: 100,
-          )),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-/*import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
-import 'lunchmeeting.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'Page5.dart';
-
-Future<void> main() async {
-  // Fireabse初期化
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  runApp(CreateMeet());
-}
-
-final FirebaseAuth auth = FirebaseAuth.instance;
-late String uid;
-void getUid() async {
-  late User? user = auth.currentUser;
-  uid = user!.uid;
-}
-
-class CreateMeet extends StatelessWidget {
-  const CreateMeet({Key? key}) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'ミートを追加',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const CreateMeetPage(title: 'ミートを追加'),
-    );
-  }
-}
-
-class CreateMeetPage extends StatefulWidget {
-  const CreateMeetPage({Key? key, required this.title}) : super(key: key);
-
-  void getData() {}
-
-  final String title;
-
-  @override
-  State<CreateMeetPage> createState() => _CreateMeetPageState();
-}
-
-class _CreateMeetPageState extends State<CreateMeetPage> {
-  void coms() async {
-    print("start");
-    await Firebase.initializeApp();
-    print("clean");
-    await FirebaseFirestore.instance
-        .collection('User')
-        .doc('D1GKO8M8XrqA5Dh9Up5T')
-        .get()
-        .then((value) {
-      print(value.get("name"));
-    });
-    print("finished");
-  }
-
-  void addevent() async {
-    await Firebase.initializeApp();
-    print("clean");
-    await FirebaseFirestore.instance.collection("Event").add({
-      'host': uid,
-      'comment': citchat,
-      'eventname': name,
-      'reservation_time': time,
-      'maxnum': maxnum,
-      'tag': tag
-    });
-    print("fin");
-  }
-
-  String name = "";
-  String time = "";
-  String member = "";
-  double maxnum = 0;
-  String citchat = "";
-  String tag = "";
-
-  @override
-  void initState() {
-    super.initState();
-    getUid();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
-        ),
-        body: Center(
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Row(children: [
-                  Text("ミートの名前"),
-                  Container(
-                    child: TextField(onChanged: (value) => name = value),
-                    width: 300,
-                  ),
-                ]),
-                Row(children: [
-                  Text("uid"),
-                  Container(
-                      child: TextField(onChanged: (value) => member = value),
-                      width: 300),
-                ]),
-                Row(
-                  children: [
-                    Text("集合時間"),
-                    Container(
-                        child: TextField(
-                          onChanged: (value) => time = value,
-                        ),
-                        width: 300),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Text("最大人数"),
-                    Container(
-                        child: TextField(onChanged: (value) {
-                          double hoge;
-                          try {
-                            hoge = double.parse(value);
-                            maxnum = hoge;
-                          } catch (exception) {}
-                        }),
-                        width: 300)
-                  ],
-                ),
-                Row(
-                  children: [
-                    Text("ひとこと"),
-                    Container(
-                        child: TextField(onChanged: (value) => citchat = value),
-                        width: 300),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Text("タグ"),
-                    Container(
-                        child: TextField(onChanged: (value) => tag = value),
-                        width: 300)
-                  ],
-                )
-              ]),
-        ),
-        floatingActionButton: Column(children: [
-          FloatingActionButton(onPressed: () {
-            addevent;
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return Page5();
-            }));
-          }),
-          FloatingActionButton(onPressed: (() => Navigator.pop(context)))
-        ]));
-  }
-}
-*/

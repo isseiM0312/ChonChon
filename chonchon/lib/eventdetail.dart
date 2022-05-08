@@ -217,76 +217,81 @@ class _EventdetailPageState extends State<EventdetailPage> {
             eventinfo("Max", "  " + maxnum),
             eventinfo("Tags", "  " + bluetag(tags))
           ],
-        ))
-      ]),
-      floatingActionButton: SizedBox(
-          height: 120,
-          width: 120,
-          child: FloatingActionButton(
-              child: Text(
-                "参加する！",
-                style: TextStyle(fontSize: 20),
-              ),
-              onPressed: () {
-                Future<void> res = whenjoin(widget.thiseventkey);
-                res.then((res) {
-                  showModalBottomSheet(
-                    backgroundColor: Colors.grey.withOpacity(0.3),
-                    isScrollControlled: true,
-                    context: context,
-                    builder: (context) {
-                      return Container(
-                          height: 900,
-                          child: Container(
-                            margin: EdgeInsets.all(30),
-                            child: Column(
-                              children: [
-                                Container(
-                                    margin: EdgeInsets.only(top: 100),
-                                    child: Text(
-                                      "Joined!",
-                                      style: TextStyle(
-                                          fontSize: 90, color: Colors.white),
-                                    )),
-                                Container(
-                                  height: 50,
-                                ),
-                                SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  child: Row(children: users),
-                                ),
-                                Container(height: 50),
-                                SizedBox(
-                                    height: 70,
-                                    width: 200,
-                                    child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        primary: Colors.orange, // background
-                                        onPrimary: Colors.white, // foreground
-                                      ),
-                                      onPressed: () => Navigator.push(context,
-                                          MaterialPageRoute(builder: (context) {
-                                        return ChatPage(
-                                          "チャット",
-                                          eventkey: widget.thiseventkey,
-                                          uid: uid,
-                                        );
-                                      })),
-                                      child: Text(
-                                        'チャット',
-                                        style: TextStyle(fontSize: 30),
-                                      ),
-                                    ))
-                              ],
+        )),
+        const SizedBox(height: 50),
+        ElevatedButton(
+          onPressed: () {
+            Future<void> res = whenjoin(widget.thiseventkey);
+            res.then((res) {
+              showModalBottomSheet(
+                backgroundColor: Colors.grey.withOpacity(0.3),
+                isScrollControlled: true,
+                context: context,
+                builder: (context) {
+                  return Container(
+                      height: 900,
+                      child: Container(
+                        margin: EdgeInsets.all(30),
+                        child: Column(
+                          children: [
+                            Container(
+                                margin: EdgeInsets.only(top: 100),
+                                child: Text(
+                                  "Joined!",
+                                  style: TextStyle(
+                                      fontSize: 90, color: Colors.white),
+                                )),
+                            Container(
+                              height: 50,
                             ),
-                            //  Navigator.pop(context),
-                            //color: Colors.grey.withOpacity(0.5),
-                          ));
-                    },
-                  );
-                });
-              })),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(children: users),
+                            ),
+                            Container(height: 50),
+                            SizedBox(
+                                height: 70,
+                                width: 200,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Colors.orange, // background
+                                    onPrimary: Colors.white, // foreground
+                                  ),
+                                  onPressed: () => Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return ChatPage(
+                                      "チャット",
+                                      eventkey: widget.thiseventkey,
+                                      uid: uid,
+                                    );
+                                  })),
+                                  child: Text(
+                                    'チャット',
+                                    style: TextStyle(fontSize: 30),
+                                  ),
+                                ))
+                          ],
+                        ),
+                        //  Navigator.pop(context),
+                        //color: Colors.grey.withOpacity(0.5),
+                      ));
+                },
+              );
+            });
+          },
+          child:
+              const Text('Join!', style: TextStyle(color: Colors.blueAccent)),
+          style: ElevatedButton.styleFrom(
+              primary: Colors.white,
+              onPrimary: Colors.blue,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              padding: const EdgeInsets.only(
+                  top: 15, bottom: 15, right: 50, left: 50),
+              textStyle: const TextStyle(fontSize: 30),
+              side: const BorderSide()),
+        ),
+      ]),
     );
   }
 }
