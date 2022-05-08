@@ -8,6 +8,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'Page5.dart';
+import 'dart:io';
+import 'dart:io' as io;
+import 'package:cached_network_image/cached_network_image.dart';
 
 Future<void> main() async {
   // Fireabse初期化
@@ -59,6 +62,7 @@ class event {
   List<String> tag = [];
   int curnum = 0;
   int maxnum = 0;
+  String hostname = "";
 
   //event({this.document, this.users, this.eventname, this.time});
 }
@@ -112,6 +116,7 @@ checkfirestore() async {
       someevent.tag = stringToList(value.get("tag"));
       someevent.curnum = int.parse(value.get("currentNum"));
       someevent.maxnum = int.parse(value.get("maxnum"));
+      someevent.hostname = value.get("host");
       print(someevent.users);
 
       //タグを追加→arrayなのでgetできない
@@ -199,48 +204,60 @@ class _LunchMeetingPageState extends State<LunchMeetingPage> {
     );
   }
 
-  
-
-  void addwidget(event e) {
+  void addwidget(event e) async {
     /* if (e.curnum != e.maxnum) { */
-    items.add(GestureDetector(
-        onTap: () {
-          //各予約をタップしたときの奴
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return EventdetailPage(
-              title: e.eventname,
-              thiseventkey: e.document,
-              thiseventname: e.eventname,
-            );
-          }));
-          //clicledevent(e);
-          setState(() {});
-        },
-        child: Container(
-          decoration: BoxDecoration(
-              color: Colors.white, border: Border.all(color: Colors.black)),
-          margin: EdgeInsets.all(5),
-          alignment: Alignment.center,
-          height: 100,
-          width: 100,
-          child: Row(
-            children: [
-              Container(
-                  margin: EdgeInsets.all(20),
+    Future<void> res = _downloadFile(e.hostname);
+    res.then((res) {
+      items.add(GestureDetector(
+          onTap: () {
+            //各予約をタップしたときの奴
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return EventdetailPage(
+                title: e.eventname,
+                thiseventkey: e.document,
+                thiseventname: e.eventname,
+              );
+            }));
+            //clicledevent(e);
+            setState(() {});
+          },
+          child: Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  blurRadius: 7,
+                  color: Colors.grey.withOpacity(0.5),
+                  offset: Offset(0, 3),
+                )
+              ]),
+            margin: EdgeInsets.all(5),
+            alignment: Alignment.center,
+            height: 100,
+            width: 100,
+            child: Row(
+              children: [
+                Container(margin:EdgeInsets.all(20) ,child: 
+               ClipRRect(
+                 borderRadius:BorderRadius.circular(25),
+                 child: SizedBox(
+                  child: ClipRRect(child: _image),
                   height: 50,
                   width: 50,
-                  color: Colors.blue),
-              Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                Text(e.eventname),
-                Text(
-                  Listtostring(e.tag),
-                  style: TextStyle(color: Colors.lightBlue),
-                )
-              ])
-              //これがボックスのタイトル
-            ],
-          ),
-        )));
+                )),),
+                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  Text(e.eventname),
+                  Text(
+                    Listtostring(e.tag),
+                    style: TextStyle(color: Colors.lightBlue),
+                  )
+                ])
+                //これがボックスのタイトル
+              ],
+            ),
+          )));
+    });
   }
 
   var selectedcolor = Colors.black;
@@ -279,6 +296,22 @@ class _LunchMeetingPageState extends State<LunchMeetingPage> {
               color: Colors.white60,
               fontSize: 20,
             )));
+  }
+
+  final ImagePicker _picker = ImagePicker();
+  Image _image = Image.asset("assets/images/noimage.png");
+  File? _file;
+  Future<void> _downloadFile(String imgPath) async {
+    // download path
+    await Firebase.initializeApp();
+    Reference ref =
+        await FirebaseStorage.instance.ref().child('profileImage/$imgPath');
+    final String url = await ref.getDownloadURL();
+    setState(() {
+      try{_image = Image.network(url);} 
+      catch (e) {_image = Image.asset("assets/images/noimage.png");}
+      
+    });
   }
 
   Future<void> executeAfterBuild() async {
@@ -341,16 +374,14 @@ class _LunchMeetingPageState extends State<LunchMeetingPage> {
   @override
   void initState() {
     super.initState();
-    //getUid();
+    getUid();
 
     setState(() {
       Future(() async {
-   await  executeAfterBuild();
-     // print(events);
-     //await myeventsearch();
- });
-
-     
+        await executeAfterBuild();
+        print(events);
+        await myeventsearch();
+      });
 
       print(invisibleload);
       print(items);
@@ -382,7 +413,7 @@ class _LunchMeetingPageState extends State<LunchMeetingPage> {
               ],
         backgroundColor: Colors.blue,
         toolbarHeight: 70,
-        elevation: 0,
+        
       ),
       body: Stack(
         children: [

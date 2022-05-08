@@ -2,6 +2,8 @@ import 'package:chonchon/addmeeting.dart';
 import 'package:chonchon/eventdetail.dart';
 import 'package:flutter/material.dart';
 import 'chat.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 String ev = "";
 
@@ -26,15 +28,66 @@ String ev = "";
   }
 } */
 
+List<String> stringToList(String listAsString) {
+  return listAsString.split(',').toList();
+}
+
+String Listtostring(List<String> list) {
+  String ane = "";
+  for (var e in list) {
+    ane = ane + "," + e;
+  }
+  return ane;
+}
+
 class Page8 extends StatefulWidget {
-  Page8({required this.eventkey,required this.uid});
+  Page8({required this.eventkey, required this.uid});
   String eventkey;
   String uid;
   @override
   _Page8State createState() => new _Page8State();
 }
 
+/* class userinfo {
+  String uid = "";
+  String name = "";
+  String iconurl = "";
+} */
+
+List<Widget> users = []; //ここに最終的なウィジェットが入る
+
 class _Page8State extends State<Page8> {
+  //ユーザ情報導入用
+  getuserinfo() async {
+    String host = "";
+    List members = [];
+    List uidlist = [];
+    await Firebase.initializeApp();
+    await FirebaseFirestore.instance
+        .collection("Event")
+        .doc(widget.eventkey)
+        .get()
+        .then((value) async {
+      host = value.get("host");
+      members = stringToList(value.get("members"));
+      uidlist = [host, ...members];
+      for (String uid in uidlist) {
+        await FirebaseFirestore.instance
+            .collection("users")
+            .doc(uid)
+            .get()
+            .then(((value) {
+          users.add(usericons(value.get("name"), value.get("imgPathUse")));
+        }));
+      }
+    });
+  }
+
+  void initState() {
+    super.initState();
+    getuserinfo();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,9 +111,9 @@ class _Page8State extends State<Page8> {
                   Container(
                     height: 50,
                   ),
-                  Row(
-                    children: [usericons(), usericons()],
-                  ),
+                 SingleChildScrollView(
+                   scrollDirection: Axis.horizontal,
+                   child: Row(children: users)),
                   Container(height: 50),
                   SizedBox(
                       height: 70,
@@ -73,7 +126,8 @@ class _Page8State extends State<Page8> {
                         onPressed: () {
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
-                            return ChatPage(name, eventkey: widget.eventkey, uid: widget.uid);
+                            return ChatPage(name,
+                                eventkey: widget.eventkey, uid: widget.uid);
                           }));
                         },
                         child: Text(
@@ -89,7 +143,7 @@ class _Page8State extends State<Page8> {
   }
 }
 
-Widget usericons() {
+Widget usericons(String name, String url) {
   return Container(
     margin: EdgeInsets.only(right: 30, left: 30, top: 30),
     child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -97,7 +151,7 @@ Widget usericons() {
         Icons.people,
         size: 50,
       ),
-      Container(margin: EdgeInsets.all(5), child: Text("ユーザー名"))
+      Container(margin: EdgeInsets.all(5), child: Text(name))
     ]),
   );
 }

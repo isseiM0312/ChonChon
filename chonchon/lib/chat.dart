@@ -15,20 +15,31 @@ import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
 class ChatPage extends StatefulWidget {
-  const ChatPage(this.name,
-      {Key? key, required this.eventkey, required this.uid})
-      : super(key: key);
+  const ChatPage(
+    this.name, {
+    Key? key,
+    required this.eventkey,
+    required this.uid,
+  }) : super(key: key);
   final String eventkey;
   final String name;
   final String uid;
+
   @override
   _ChatPageState createState() => _ChatPageState();
 }
 
+/* final FirebaseAuth auth = FirebaseAuth.instance;
+String uid = "";
+void getUid() async {
+  late User? user = auth.currentUser;
+  uid = user!.uid;
+} */
+
 class _ChatPageState extends State<ChatPage> {
   List<types.Message> _messages = [];
   String randomId = Uuid().v4();
-  final _user = types.User(id: uid, firstName: '名前');
+  final _user = types.User(id: uid, firstName:"名前");
   String keykey = "";
 
   void initState() {
@@ -36,6 +47,7 @@ class _ChatPageState extends State<ChatPage> {
     print(widget.eventkey);
     setState(() {
       keykey = widget.eventkey;
+      getUid();
     });
   }
 
@@ -110,7 +122,7 @@ class _ChatPageState extends State<ChatPage> {
     final textMessage = types.TextMessage(
       author: _user,
       createdAt: DateTime.now().millisecondsSinceEpoch, //
-      id: randomId,
+      id: uid,
       text: message.text,
     );
 

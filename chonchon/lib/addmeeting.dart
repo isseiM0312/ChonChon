@@ -16,7 +16,7 @@ Future<void> main() async {
 }
 
 final FirebaseAuth auth = FirebaseAuth.instance;
- String uid ="";
+String uid = "";
 void getUid() async {
   late User? user = auth.currentUser;
   uid = user!.uid;
@@ -78,7 +78,7 @@ class _CreateMeetPageState extends State<CreateMeetPage> {
         .doc(uid)
         .get()
         .then((value) {
-      mytag =stringToList(value.get("tagsString")) ;
+      mytag = stringToList(value.get("tagsString"));
     });
   }
 
@@ -184,7 +184,6 @@ class _CreateMeetPageState extends State<CreateMeetPage> {
 
   void caltimepicker() {
     DatePicker.showTimePicker(
-      
       context,
       showTitleActions: true,
 
@@ -217,7 +216,7 @@ class _CreateMeetPageState extends State<CreateMeetPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Container(
-            height: 30,
+            height: 100,
           ),
           Row(children: [
             Container(
@@ -249,8 +248,9 @@ class _CreateMeetPageState extends State<CreateMeetPage> {
               ),
               Container(child: Text(reservetime), width: 250),
               IconButton(
-                  onPressed: () async {
-                   await caltimepicker;
+                  onPressed: () {
+                    print("HHHHHHHHHHHHHHHHHHHHHHHHey");
+                    caltimepicker();
                   },
                   icon: Icon(Icons.timer))
             ],

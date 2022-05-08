@@ -1,14 +1,33 @@
 import 'dart:io' as io;
 import 'dart:io';
+
+import 'package:chonchon/bottomnavigationbar.dart';
+import 'package:chonchon/lunchmeeting.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+import 'dart:io' as io;
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:chonchon/profile_edit.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+
 class ProfileEditPage extends StatefulWidget {
   @override
   _ProfileEditPageState createState() => _ProfileEditPageState();
 }
+
 class _ProfileEditPageState extends State<ProfileEditPage> {
   // 写真を表示用
   String imgPathUse = '';
@@ -20,7 +39,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   String grade = '未設定';
   // comment表示用
   String comment = '未設定';
-   String uid ="";
+  String uid = "";
   List<String> stringToList(String listAsString) {
     return listAsString.split(',').toList();
   }
@@ -47,6 +66,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
     uid = user!.uid;
     // here you write the codes to input the data into firestore
   }
+
   Future getProfile() async {
     await users.doc(uid).get().then((DocumentSnapshot snapshot) {
       setState(() {
@@ -65,12 +85,15 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
       });
     });
   }
+
   @override
   void initState() {
     super.initState();
     setLoginInfo();
+
     _textFieldFocusNode = FocusNode();
   }
+
   Future setLoginInfo() async {
     getUid();
     await getProfile();
@@ -80,13 +103,16 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
       _major_controller.text = major;
       _grade_controller.text = grade;
       _comment_controller.text = comment;
+      _downloadFile(uid);
     });
   }
+
   @override
   void dispose() {
     _textFieldFocusNode.dispose();
     super.dispose();
   }
+
   void _onSubmitted(String text) {
     setState(() {
       _inputController.text = '';
@@ -94,6 +120,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
       FocusScope.of(context).requestFocus(_textFieldFocusNode);
     });
   }
+
   void _addChip(String text) {
     if (text == '') return;
     var chipKey = Key('chip_key_$_keyNumber');
@@ -106,9 +133,11 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
       ),
     );
   }
+
   void _deleteChip(Key chipKey) {
     setState(() => _chipList.removeWhere((Widget w) => w.key == chipKey));
   }
+
   final ImagePicker _picker = ImagePicker();
   late var _image = null;
   File? _file;
@@ -127,6 +156,21 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
       print(FirebaseException);
       //エラー処理
     }
+  }
+
+  final ImagePicker _picker2 = ImagePicker();
+  Image _image2 = Image.asset("assets/images/noimage.png");
+  File? _file2;
+  Future<void> _downloadFile(String imgPath) async {
+    // download path
+    await Firebase.initializeApp();
+
+    Reference ref =
+        await FirebaseStorage.instance.ref().child('profileImage/$imgPath');
+    final String url = await ref.getDownloadURL();
+    setState(() {
+      _image2 = Image.network(url);
+    });
   }
 
   bool isVisible = true;
@@ -166,6 +210,9 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                 //   "limitDay": Datetime.now()
                 // });
                 Navigator.pop(context, true);
+                /*  Navigator.push(context, MaterialPageRoute(builder: ((context) {
+                  return BottomBarWidget();
+                }))); */
               }),
         ],
       ),
@@ -174,22 +221,38 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Visibility(
-              child: Image.asset("assets/images/noimage.png"),
+              child: //_image2
+                Container(
+                  width: 150.0,
+                  height: 150.0,
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(75),
+                      child: _image2,
+                )),
+              
               visible: isVisible,
             ),
 
             if (_file != null)
               AspectRatio(
                 aspectRatio: 1,
-                child: Image.file(
+                child:
+                Container(
+                  width: 150.0,
+                  height: 150.0,
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(75),
+                      child: Image.file(
                   _file!,
                   fit: BoxFit.cover,
                 ),
+                )),
+                 
               ),
             OutlinedButton(
                 onPressed: () async {
                   setState(toggleHiddenImage);
-                  _image = await _picker.getImage(source: ImageSource.gallery);
+                  _image = await _picker.pickImage(source: ImageSource.gallery);
                   if (_image == null) {
                     setState(toggleHiddenImage);
                   }
