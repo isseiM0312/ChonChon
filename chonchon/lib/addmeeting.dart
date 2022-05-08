@@ -208,7 +208,7 @@ class _CreateMeetPageState extends State<CreateMeetPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Container(
-            height: 30,
+            height: 120,
           ),
           Row(children: [
             Container(
@@ -221,6 +221,7 @@ class _CreateMeetPageState extends State<CreateMeetPage> {
               width: 300,
             ),
           ]),
+          const SizedBox(height: 5),
           /*  Row(children: [
               Container(
                 width: 100,
@@ -246,6 +247,7 @@ class _CreateMeetPageState extends State<CreateMeetPage> {
                   icon: Icon(Icons.timer))
             ],
           ),
+          const SizedBox(height: 5),
           Row(
             children: [
               Container(
@@ -265,6 +267,7 @@ class _CreateMeetPageState extends State<CreateMeetPage> {
                   width: 300)
             ],
           ),
+          const SizedBox(height: 5),
           Row(
             children: [
               Container(
@@ -278,6 +281,7 @@ class _CreateMeetPageState extends State<CreateMeetPage> {
                   width: 300),
             ],
           ),
+          const SizedBox(height: 5),
           Row(
             children: [
               Container(
@@ -332,42 +336,55 @@ class _CreateMeetPageState extends State<CreateMeetPage> {
               ),
             ],
           ),
+          const SizedBox(height: 90),
+          ElevatedButton(
+            onPressed: () {
+              finaltag = Listtostring(taglist);
+              Future<void> res = addevent();
+              res.then((value) {});
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return Page5(
+                  eventkey: eventkey,
+                );
+              }));
+            },
+            child: const Text('Create new meeting',
+                style: TextStyle(color: Colors.blueAccent)),
+            style: ElevatedButton.styleFrom(
+                primary: Colors.white,
+                onPrimary: Colors.blue,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                padding: const EdgeInsets.only(
+                    top: 20, bottom: 20, right: 40, left: 40),
+                textStyle: const TextStyle(fontSize: 25),
+                side: const BorderSide()),
+          ),
         ],
       ))),
-      floatingActionButton: Visibility(
-          visible: noselecting,
-          child: SizedBox(
-            child: FloatingActionButton(
-                child: Text("作成"),
-                heroTag: 40,
-                onPressed: () {
-                  finaltag = Listtostring(taglist);
-                  Future<void> res = addevent();
-                  res.then((value) {});
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return Page5(
-                      eventkey: eventkey,
-                    );
-                  }));
-                }),
-            width: 100,
-            height: 100,
-          )),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      // floatingActionButton: Visibility(
+      //     visible: noselecting,
+      //     child: SizedBox(
+      //       child: FloatingActionButton(
+      //           child: Text("作成"),
+      //           heroTag: 40,
+      //           onPressed: () {
+      //             finaltag = Listtostring(taglist);
+      //             Future<void> res = addevent();
+      //             res.then((value) {});
+      //             Navigator.push(context, MaterialPageRoute(builder: (context) {
+      //               return Page5(
+      //                 eventkey: eventkey,
+      //               );
+      //             }));
+      //           }),
+      //       width: 100,
+      //       height: 100,
+      //     )),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }
-
-
-
-
-
-
-
-
-
-
-
 
 /*import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';

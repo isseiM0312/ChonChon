@@ -174,105 +174,109 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
         ],
       ),
       body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Visibility(
-              child: Image.asset("assets/images/noimage.png"),
-              visible: isVisible,
-            ),
+        child: Container(
+          padding: EdgeInsets.only(left: 35, right: 35),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Visibility(
+                child: Image.asset("assets/images/noimage.png"),
+                visible: isVisible,
+              ),
 
-            if (_file != null)
-              AspectRatio(
-                aspectRatio: 1,
-                child: Image.file(
-                  _file!,
-                  fit: BoxFit.cover,
+              if (_file != null)
+                AspectRatio(
+                  aspectRatio: 1,
+                  child: Image.file(
+                    _file!,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              OutlinedButton(
+                  onPressed: () async {
+                    setState(toggleHiddenImage);
+                    _image =
+                        await _picker.getImage(source: ImageSource.gallery);
+                    if (_image == null) {
+                      setState(toggleHiddenImage);
+                    }
+                    _file = File(_image!.path);
+                    setState(() {});
+                  },
+                  child: const Text('画像を選択')),
+              TextFormField(
+                controller: _name_controller,
+                decoration: InputDecoration(labelText: '名前'),
+                onChanged: (String value) {
+                  setState(() {
+                    name = value;
+                  });
+                },
+              ),
+              //major入力
+              TextFormField(
+                controller: _major_controller,
+                decoration: InputDecoration(labelText: '学部・学科'),
+                onChanged: (String value) {
+                  setState(() {
+                    major = value;
+                  });
+                },
+              ),
+              //grade入力
+              TextFormField(
+                controller: _grade_controller,
+                decoration: InputDecoration(labelText: '学年'),
+                onChanged: (String value) {
+                  setState(() {
+                    grade = value;
+                  });
+                },
+              ),
+              //comment入力
+              TextFormField(
+                controller: _comment_controller,
+                decoration: InputDecoration(labelText: 'コメント'),
+                onChanged: (String value) {
+                  setState(() {
+                    comment = value;
+                  });
+                },
+              ),
+              Container(
+                padding: EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    TextField(
+                      focusNode: _textFieldFocusNode,
+                      autofocus: true,
+                      controller: _inputController,
+                      decoration: InputDecoration(
+                        hintText: "タグを追加",
+                      ),
+                      onSubmitted: _onSubmitted,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                          child: Wrap(
+                            alignment: WrapAlignment.start,
+                            spacing: 8.0,
+                            runSpacing: 0.0,
+                            direction: Axis.horizontal,
+                            children: _chipList,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-            OutlinedButton(
-                onPressed: () async {
-                  setState(toggleHiddenImage);
-                  _image = await _picker.getImage(source: ImageSource.gallery);
-                  if (_image == null) {
-                    setState(toggleHiddenImage);
-                  }
-                  _file = File(_image!.path);
-                  setState(() {});
-                },
-                child: const Text('画像を選択')),
-            TextField(
-              controller: _name_controller,
-              decoration: InputDecoration(labelText: '名前'),
-              onChanged: (String value) {
-                setState(() {
-                  name = value;
-                });
-              },
-            ),
-            //major入力
-            TextFormField(
-              controller: _major_controller,
-              decoration: InputDecoration(labelText: '学部・学科'),
-              onChanged: (String value) {
-                setState(() {
-                  major = value;
-                });
-              },
-            ),
-            //grade入力
-            TextFormField(
-              controller: _grade_controller,
-              decoration: InputDecoration(labelText: '学年'),
-              onChanged: (String value) {
-                setState(() {
-                  grade = value;
-                });
-              },
-            ),
-            //comment入力
-            TextFormField(
-              controller: _comment_controller,
-              decoration: InputDecoration(labelText: 'コメント'),
-              onChanged: (String value) {
-                setState(() {
-                  comment = value;
-                });
-              },
-            ),
-            Container(
-              padding: EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  TextField(
-                    focusNode: _textFieldFocusNode,
-                    autofocus: true,
-                    controller: _inputController,
-                    decoration: InputDecoration(
-                      hintText: "タグを追加",
-                    ),
-                    onSubmitted: _onSubmitted,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Expanded(
-                        child: Wrap(
-                          alignment: WrapAlignment.start,
-                          spacing: 8.0,
-                          runSpacing: 0.0,
-                          direction: Axis.horizontal,
-                          children: _chipList,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
