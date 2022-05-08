@@ -255,44 +255,56 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                   _upload();
                 },
                 child: const Text('画像を選択')),
-            TextField(
-              controller: _name_controller,
-              decoration: InputDecoration(labelText: '名前'),
-              onChanged: (String value) {
-                setState(() {
-                  name = value;
-                });
-              },
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: TextField(
+                controller: _name_controller,
+                decoration: InputDecoration(labelText: '名前'),
+                onChanged: (String value) {
+                  setState(() {
+                    name = value;
+                  });
+                },
+              ),
             ),
             //major入力
-            TextFormField(
-              controller: _major_controller,
-              decoration: InputDecoration(labelText: '学部・学科'),
-              onChanged: (String value) {
-                setState(() {
-                  major = value;
-                });
-              },
+            Padding(
+              padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+              child: TextFormField(
+                controller: _major_controller,
+                decoration: InputDecoration(labelText: '学部・学科'),
+                onChanged: (String value) {
+                  setState(() {
+                    major = value;
+                  });
+                },
+              ),
             ),
             //grade入力
-            TextFormField(
-              controller: _grade_controller,
-              decoration: InputDecoration(labelText: '学年'),
-              onChanged: (String value) {
-                setState(() {
-                  grade = value;
-                });
-              },
+            Padding(
+              padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+              child: TextFormField(
+                controller: _grade_controller,
+                decoration: InputDecoration(labelText: '学年'),
+                onChanged: (String value) {
+                  setState(() {
+                    grade = value;
+                  });
+                },
+              ),
             ),
             //comment入力
-            TextFormField(
-              controller: _comment_controller,
-              decoration: InputDecoration(labelText: 'コメント'),
-              onChanged: (String value) {
-                setState(() {
-                  comment = value;
-                });
-              },
+            Padding(
+              padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+              child: TextFormField(
+                controller: _comment_controller,
+                decoration: InputDecoration(labelText: 'コメント'),
+                onChanged: (String value) {
+                  setState(() {
+                    comment = value;
+                  });
+                },
+              ),
             ),
             Container(
               padding: EdgeInsets.all(16.0),
