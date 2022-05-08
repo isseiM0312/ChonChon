@@ -179,8 +179,18 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              // Visibility(
+              //   child: Image.asset("assets/images/noimage.png"),
+              //   visible: isVisible,
+              // ),
               Visibility(
-                child: Image.asset("assets/images/noimage.png"),
+                child: Container(
+                    height: 150,
+                    margin: EdgeInsets.only(top: 25.0, bottom: 10.0),
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                      shape: BoxShape.circle,
+                    )),
                 visible: isVisible,
               ),
 

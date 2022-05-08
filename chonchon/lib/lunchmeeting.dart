@@ -198,7 +198,15 @@ class _LunchMeetingPageState extends State<LunchMeetingPage> {
         },
         child: Container(
           decoration: BoxDecoration(
-              color: Colors.white, border: Border.all(color: Colors.black)),
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  blurRadius: 7,
+                  color: Colors.grey.withOpacity(0.5),
+                  offset: Offset(0, 3),
+                )
+              ]),
           margin: EdgeInsets.all(5),
           alignment: Alignment.center,
           height: 100,
@@ -206,10 +214,14 @@ class _LunchMeetingPageState extends State<LunchMeetingPage> {
           child: Row(
             children: [
               Container(
-                  margin: EdgeInsets.all(20),
-                  height: 50,
-                  width: 50,
-                  color: Colors.blue),
+                margin: EdgeInsets.all(20),
+                height: 50,
+                width: 50,
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                  shape: BoxShape.circle,
+                ),
+              ),
               Column(mainAxisAlignment: MainAxisAlignment.center, children: [
                 Text(e.eventname),
                 Text(
@@ -351,7 +363,6 @@ class _LunchMeetingPageState extends State<LunchMeetingPage> {
               ],
         backgroundColor: Colors.blue,
         toolbarHeight: 70,
-        elevation: 0,
       ),
       body: Stack(
         children: [
