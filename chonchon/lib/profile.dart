@@ -1,25 +1,18 @@
 import 'dart:io';
-import 'dart:io' as io;
-import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
+
 import 'package:chonchon/profile_edit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-
 
 class ProfilePage extends StatefulWidget {
-
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
-
 
 class _ProfilePageState extends State<ProfilePage> {
   //List<String> tags = ["python", "swift", "dart", "flutter"];
@@ -78,6 +71,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           );
         }
+        _downloadFile(uid);
       });
     });
   }
@@ -96,7 +90,6 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
-
   @override
   void initState() {
     super.initState();
@@ -113,7 +106,6 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-
         title: Text('マイページ'),
         actions: [
           IconButton(
@@ -148,11 +140,11 @@ class _ProfilePageState extends State<ProfilePage> {
               SizedBox(
                 width: 150,
                 height: 150,
-                child: AspectRatio(aspectRatio: 1,
-                 child: ClipRRect(
-                      borderRadius: BorderRadius.circular(75),
-                      child:  _image),
-               ),
+                child: AspectRatio(
+                  aspectRatio: 1,
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(75), child: _image),
+                ),
               ),
             Text(
               "名前",
@@ -214,21 +206,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Expanded(
-                  child: Wrap(
-                    alignment: WrapAlignment.start,
-                    spacing: 8.0,
-                    runSpacing: 0.0,
-                    direction: Axis.horizontal,
-                    children: _chipList,
-                  ),
-                ),
-              ],
-            ),
             Container(
               padding: EdgeInsets.only(left: 40, top: 5, right: 40),
               child: Row(
@@ -254,7 +231,6 @@ class _ProfilePageState extends State<ProfilePage> {
             )
           ],
         ),
-
       ),
     );
   }

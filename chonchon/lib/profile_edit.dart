@@ -1,29 +1,13 @@
 import 'dart:io' as io;
 import 'dart:io';
 
-import 'package:chonchon/bottomnavigationbar.dart';
-import 'package:chonchon/lunchmeeting.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-
-import 'dart:io';
-import 'dart:io' as io;
-import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:chonchon/profile_edit.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProfileEditPage extends StatefulWidget {
   @override
@@ -63,7 +47,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   var _inputController = TextEditingController();
   late var _chipList = <Chip>[];
   var _keyNumber = 0;
-  void getUid() async {
+  Future<void> getUid() async {
     late User? user = auth.currentUser;
     uid = user!.uid;
     // here you write the codes to input the data into firestore
@@ -90,22 +74,24 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   @override
   void initState() {
     super.initState();
-    setLoginInfo();
+    Future(() async {
+      await setLoginInfo();
+    });
 
+    setState(() {});
     _textFieldFocusNode = FocusNode();
   }
 
-  Future setLoginInfo() async {
-    getUid();
+  Future<void> setLoginInfo() async {
+    await getUid();
     await getProfile();
-    setState(() {
-      // _imgPathUse_controller.text = imgPathUse;
-      _name_controller.text = name;
-      _major_controller.text = major;
-      _grade_controller.text = grade;
-      _comment_controller.text = comment;
-      _downloadFile(uid);
-    });
+
+    // _imgPathUse_controller.text = imgPathUse;
+    _name_controller.text = name;
+    _major_controller.text = major;
+    _grade_controller.text = grade;
+    _comment_controller.text = comment;
+    await _downloadFile(uid);
   }
 
   @override
@@ -165,12 +151,34 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
     Reference ref =
         await FirebaseStorage.instance.ref().child('profileImage/$imgPath');
     final String url = await ref.getDownloadURL();
-    setState(() {
-      _image2 = Image.network(url);
-    });
+    _image2 = await Image.network(url);
+    setState(() {});
   }
 
   bool isVisible = true;
+
+  void _upload() async {
+    // imagePickerで画像を選択する
+    // upload
+    print('a');
+    FirebaseStorage storage = FirebaseStorage.instance;
+    final XFile? pickedFile;
+    try {
+      pickedFile = await ImagePicker().pickImage(
+        source: ImageSource.gallery,
+      );
+      print('b');
+      File file = File(pickedFile!.path);
+      setState(() {
+        _image2 = Image.file(file);
+      });
+
+      print('c');
+      await storage.ref("profileImage/$uid").putFile(file);
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -200,7 +208,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                   //いったんimagepathuse
                   'imgPathUse': '',
                 });
-                uploadFile(_image!.path, uid);
+                //uploadFile(_image!.path, uid);
                 // Firestore.instance.collection("todos")document("1").setData({
                 //   "title": "test",
                 //   "limitDay": Datetime.now()
@@ -218,42 +226,33 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
           children: <Widget>[
             Visibility(
               child: //_image2
-                Container(
-                  width: 150.0,
-                  height: 150.0,
-                  child: ClipRRect(
-                      borderRadius: BorderRadius.circular(75),
-                      child: _image2,
-                )),
-              
+                  Container(
+                      width: 150.0,
+                      height: 150.0,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(75),
+                        child: _image2,
+                      )),
               visible: isVisible,
             ),
 
             if (_file != null)
               AspectRatio(
                 aspectRatio: 1,
-                child:
-                Container(
-                  width: 150.0,
-                  height: 150.0,
-                  child: ClipRRect(
+                child: Container(
+                    width: 150.0,
+                    height: 150.0,
+                    child: ClipRRect(
                       borderRadius: BorderRadius.circular(75),
                       child: Image.file(
-                  _file!,
-                  fit: BoxFit.cover,
-                ),
-                )),
-                 
+                        _file!,
+                        fit: BoxFit.cover,
+                      ),
+                    )),
               ),
             OutlinedButton(
-                onPressed: () async {
-                  setState(toggleHiddenImage);
-                  _image = await _picker.pickImage(source: ImageSource.gallery);
-                  if (_image == null) {
-                    setState(toggleHiddenImage);
-                  }
-                  _file = File(_image!.path);
-                  setState(() {});
+                onPressed: () {
+                  _upload();
                 },
                 child: const Text('画像を選択')),
             TextField(

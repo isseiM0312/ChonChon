@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'lunchmeeting.dart';
 import 'package:flutter/rendering.dart';
-import 'Page5.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
-import 'package:intl/intl.dart';
+
+import 'Page5.dart';
+import 'lunchmeeting.dart';
 
 Future<void> main() async {
   // Fireabse初期化
@@ -218,7 +218,7 @@ class _CreateMeetPageState extends State<CreateMeetPage> {
                 )),
             Container(
               child: TextField(onChanged: (value) => name = value),
-              width: 300,
+              width: 250,
             ),
           ]),
           /*  Row(children: [
@@ -238,13 +238,11 @@ class _CreateMeetPageState extends State<CreateMeetPage> {
                 width: 100,
                 child: Center(child: Text("集合時間")),
               ),
-              Container(child: Text(reservetime), width: 250),
+              Container(child: Text(reservetime), width: 200),
               IconButton(
-
                   onPressed: () {
                     print("HHHHHHHHHHHHHHHHHHHHHHHHey");
                     caltimepicker();
-
                   },
                   icon: Icon(Icons.timer))
             ],
@@ -265,7 +263,7 @@ class _CreateMeetPageState extends State<CreateMeetPage> {
                       maxnum = hoge.toString();
                     } catch (exception) {}
                   }),
-                  width: 300)
+                  width: 250)
             ],
           ),
           Row(
@@ -278,7 +276,7 @@ class _CreateMeetPageState extends State<CreateMeetPage> {
               ),
               Container(
                   child: TextField(onChanged: (value) => citchat = value),
-                  width: 300),
+                  width: 250),
             ],
           ),
           Row(
@@ -299,7 +297,7 @@ class _CreateMeetPageState extends State<CreateMeetPage> {
                       ),
                       onSubmitted: _onSubmitted,
                       onChanged: (value) => tag = value),
-                  width: 250),
+                  width: 200),
               IconButton(
                   onPressed: (() {
                     tagooverrapded = false;
@@ -360,17 +358,6 @@ class _CreateMeetPageState extends State<CreateMeetPage> {
     );
   }
 }
-
-
-
-
-
-
-
-
-
-
-
 
 /*import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
