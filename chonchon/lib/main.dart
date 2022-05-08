@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'bottomnavigationbar.dart';
 
-// new2の変更by boy
+// new2の変更by cory
 /*void main() {
   runApp(const MyApp());
 }*/
